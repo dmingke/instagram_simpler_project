@@ -1,4 +1,4 @@
-#!/Users/dmingke/Desktop/eecs485/p3/env/bin/python3.10
+#!/Users/yuqizhao/Desktop/umich_coursework/winter2023/p3-insta485-clientside/env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
