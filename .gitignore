@@ -79,3 +79,4 @@ Icon
 .dropbox*
 env/bin/activate
 *.csh
+*.pyc
