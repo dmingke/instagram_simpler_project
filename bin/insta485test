@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# insta485test
+#
+# Write another script called bin/insta485test:
+#
+# Qisi Yang <yangqs@umich.edu>
+# Stops on errors and prints commands
+set -Eeuo pipefail
+set -x
+
+
+# Run pycodestyle insta485
+pycodestyle insta485
+# Run pydocstyle insta485
+pydocstyle insta485
+# Run pylint --disable=cyclic-import --unsafe-load-any-extension=y insta485
+pylint --disable=cyclic-import --unsafe-load-any-extension=y insta485
+# Run all unit tests using pytest -v tests
+pytest -v tests
+

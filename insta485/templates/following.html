@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <title>
+        insta485
+    </title>
+
+  <style>
+    .heading{
+      height: 50px;
+      font-size: large;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+    }
+    .out{
+        height: 70px;
+        width: 700px;
+        border: 2px solid black; 
+        margin: auto;
+    }
+    .picture1{
+        height: 50px;
+        width: 30px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="heading">
+    <div class="col-sm-4">
+      <a href="/">camera icon</a>
+    </div>
+    <div class="col-sm-4">
+    </div>
+    <div class="col-sm-4">
+      <a href="/explore/">explore</a>
+      &nbsp;| &nbsp;
+      <a href="/users/{{logname}}/">{{logname}}</a>
+      <!-- <a href="users/awdeorio/">awdeorio</a> -->
+    </div>
+  </div>
+  <hr>
+  <br>
+  <br>
+  <br>
+  <h1>Following</h1>
+
+
+  {% for foll in following %}
+    <div class="out">
+        <div class="col-sm-2">
+            <!-- {{user_img_url}} -->
+            <a href="/users/{{foll.username2}}/"><img src={{foll.user_img_url}} alt="men 1" class="picture1"></a>
+        </div>
+        <div class="col-sm-2">{{foll.username2}}</div>
+        <div class="col-sm-4"></div>
+        {% if foll.logname_follows_username %}
+            <div class="col-sm-4">following</div>
+            <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+            <form action="/following/?target=/users/{{logname}}/following/" method="post" enctype="multipart/form-data">
+              <input type="submit" name="unfollow" value="unfollow"/>
+              <input type="hidden" name="username" value="{{foll.username2}}"/>
+              <input type="hidden" name="operation" value="unfollow"/>
+            </form>
+
+        {% elif foll.username2 == logname %}
+            <div class="col-sm-4">&nbsp;&nbsp;</div>
+        {% else %}
+            <div class="col-sm-4">not following</div>
+            <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+            <form action="/following/?target=/users/{{logname}}/following/" method="post" enctype="multipart/form-data">
+              <input type="submit" name="follow" value="follow"/>
+              <input type="hidden" name="username" value="{{foll.username2}}"/>
+              <input type="hidden" name="operation" value="follow"/>
+            </form>
+
+        {% endif %}
+    </div>
+  {% endfor %}
+</body>
+</html>
