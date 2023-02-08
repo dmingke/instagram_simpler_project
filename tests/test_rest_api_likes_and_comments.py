@@ -2,7 +2,7 @@
 import json
 from base64 import b64encode
 
-'''
+
 def test_likes_delete(client):
     """Verify DELETE 'likes' endpoint using Basic HTTP auth.
 
@@ -50,7 +50,7 @@ def test_likes_delete(client):
         content_type="application/json",
     )
     assert response.status_code == 403
-'''
+
 
 def test_likes_post(client):
     """Verify POST 'likes' endpoint.
@@ -104,7 +104,7 @@ def test_like_exists(client):
         "url": "/api/v1/likes/6/",
         }
 
-'''
+
 def test_comments_post(client):
     """Verify POST 'comments' endpoint.
 
@@ -229,4 +229,3 @@ def test_comments_delete(client):
         content_type="application/json",
     )
     assert response.status_code == 403
-'''

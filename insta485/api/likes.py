@@ -22,7 +22,7 @@ def create_like():
 
     #getting post id
     postid = flask.request.args.get('postid')
-    print(postid)
+
     #check if the like is already existing
     connection = insta485.model.get_db()
     cur = connection.execute(
