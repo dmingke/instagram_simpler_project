@@ -2,7 +2,7 @@
 import flask
 import insta485
 
-@insta485.app.route('/api/v1/posts/<int:postid_url_slug>/')
+@insta485.app.route('/api/v1/posts/<int:postid_url_slug>/', methods=['GET'])
 def get_post(postid_url_slug):
     #checking authorization...
     auth = flask.request.authorization
@@ -99,7 +99,5 @@ def get_post(postid_url_slug):
     context['postShowUrl'] = "/posts/{}/".format(postid_url_slug)
     context['postid'] = postid_url_slug
     context['url'] = flask.request.path
-
-    #print(context)
 
     return flask.jsonify(**context)

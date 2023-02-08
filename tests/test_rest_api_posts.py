@@ -478,7 +478,7 @@ def test_posts_pagination_errors(client):
         headers={"Authorization": f"Basic {credentials}"}
     )
     assert response.status_code == 404
-
+GET /api/v1/posts/<postid>/
     response = client.get(
         "/api/v1/posts/1000/comments/",
         headers={"Authorization": f"Basic {credentials}"}
