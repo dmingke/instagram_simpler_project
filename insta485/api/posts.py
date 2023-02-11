@@ -113,6 +113,14 @@ def get_post1(postid_url_slug):
 
     #get post info from db
     connection = insta485.model.get_db()
+    largest = connection.execute(
+        "SELECT postid "
+        "FROM posts"
+    ).fetchall()
+    numPost = len(largest)
+    newest = largest[numPost-1]['postid']
+    if postid_url_slug > newest:
+        return flask.jsonify({}), 404
     cur = connection.execute(
         "SELECT filename,owner,created FROM posts "
         "WHERE postid=?",
