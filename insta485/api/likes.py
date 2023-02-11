@@ -5,17 +5,12 @@ import insta485
 @insta485.app.route('/api/v1/likes/', methods=['POST'])
 def create_like():
     #checking authorization...
-    auth = flask.request.authorization
-    if 'username' not in flask.session and not auth:
-        flask.abort(403)
-    username = None
-    password = None
-    if auth:
-        username = flask.request.authorization['username']
+    logname = flask.session.get('username')
+    if not logname:
+        logname = flask.request.authorization['username']
         password = flask.request.authorization['password']
-    else:
-        username = flask.session.request['username']
-        password = flask.session.request['password']
+        if not logname or not password:
+            return flask.jsonify({}), 400
     
     #initializing context dictionary
     context = {}
