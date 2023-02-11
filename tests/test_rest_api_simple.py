@@ -1,7 +1,6 @@
 """Sanity checks for REST API."""
 import base64
 
-'''
 def test_resources(client):
     """Verify GET requests to initial endpoint.
 
@@ -18,7 +17,7 @@ def test_resources(client):
         "likes": "/api/v1/likes/",
         "url": "/api/v1/",
     }
-'''
+
 
 def test_login_session(client):
     """Verify GET request to posts route with login session.

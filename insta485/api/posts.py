@@ -29,6 +29,9 @@ def get_post():
     # each post is made by a user which the logged in user follows 
     # or the post is made by the logged in user. 
     # When postid_lte is not specified, default to the most recent postid
+    auth = flask.request.authorization
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
     logname = flask.session.get('username')
     if not logname:
         logname = flask.request.authorization['username']
@@ -84,6 +87,9 @@ def get_post():
 @insta485.app.route('/api/v1/posts/<int:postid_url_slug>/', methods=['GET'])
 def get_post1(postid_url_slug):
     #checking authorization...
+    auth = flask.request.authorization
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
     username = flask.session.get('username')
     if not username:
         username = flask.request.authorization['username']
@@ -187,6 +193,9 @@ def get_post1(postid_url_slug):
 @insta485.app.route('/api/v1/likes/', methods=['POST'])
 def create_like():
     #checking authorization...
+    auth = flask.request.authorization
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
     username = flask.session.get('username')
     if not username:
         username = flask.request.authorization['username']
@@ -239,6 +248,9 @@ def create_like():
 # DELETE /api/v1/likes/<likeid>/
 @insta485.app.route('/api/v1/likes/<likeid>/',methods=['DELETE'])
 def delete_like(likeid):
+    auth = flask.request.authorization
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
     username = flask.session.get('username')
     if not username:
         username = flask.request.authorization['username']
@@ -281,8 +293,10 @@ def delete_like(likeid):
 
 @insta485.app.route('/api/v1/comments/', methods=['POST'])
 def create_comment():
+    auth = flask.request.authorization
     """return create comment """
-
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
     username = flask.session.get('username')
     if not username:
         username = flask.request.authorization['username']
@@ -350,7 +364,10 @@ def create_comment():
 # DELETE /api/v1/comments/<commentid>/
 @insta485.app.route('/api/v1/comments/<commentid>/', methods=['DELETE'])
 def delete_comment(commentid):
+    auth = flask.request.authorization
     """delete a comment"""
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
     print("it is run")
     username = flask.session.get('username')
     if not username:
