@@ -83,17 +83,12 @@ def get_post():
 @insta485.app.route('/api/v1/posts/<int:postid_url_slug>/', methods=['GET'])
 def get_post1(postid_url_slug):
     #checking authorization...
-    auth = flask.request.authorization
-    if 'username' not in flask.session and not auth:
-        flask.abort(403)
-    username = None
-    password = None
-    if auth:
+    username = flask.session.get('username')
+    if not username:
         username = flask.request.authorization['username']
         password = flask.request.authorization['password']
-    else:
-        username = flask.session.request['username']
-        password = flask.session.request['password']
+        if not username or not password:
+            return flask.jsonify({}), 400
 
     #get post info from db
     connection = insta485.model.get_db()
@@ -146,23 +141,31 @@ def get_post1(postid_url_slug):
         (postid_url_slug, )
     )
     like_condition = cur.fetchall()
+    print(like_condition)
     likes_dict = {}
-    numlikes = len(like_condition)
-    login_user_liked = False
-    like_id = like_condition[0]['likeid']
-
-    for likes in like_condition:
-        if username == likes['owner']:
-            login_user_liked = True
-    if login_user_liked:
-        like_url = "/api/v1/likes/{}/".format(like_id)
+    if(len(like_condition) == 0):
+        numlikes = 0
+        login_user_liked = False
+        like_url = None
+        likes_dict['url'] = like_url
+        likes_dict['lognameLikesThis'] = login_user_liked
+        likes_dict['numLikes'] = numlikes
     else:
-        #If the logged in user does not like the post
-        #then the like url should be null
-        like_url = null
-    likes_dict['url'] = like_url
-    likes_dict['lognameLikesThis'] = login_user_liked
-    likes_dict['numLikes'] = numlikes
+        numlikes = len(like_condition)
+        login_user_liked = False
+        like_id = like_condition[0]['likeid']
+        for likes in like_condition:
+            if username == likes['owner']:
+                login_user_liked = True
+        if login_user_liked:
+            like_url = "/api/v1/likes/{}/".format(like_id)
+        else:
+            #If the logged in user does not like the post
+            #then the like url should be null
+            like_url = null
+        likes_dict['url'] = like_url
+        likes_dict['lognameLikesThis'] = login_user_liked
+        likes_dict['numLikes'] = numlikes
 
     #assemble information into the context dictionary
     context = {}
@@ -180,54 +183,15 @@ def get_post1(postid_url_slug):
 
     return flask.jsonify(**context)
 
-
-
-# @insta485.app.route('/api/v1/posts/<int:postid_url_slug>/')
-# def get_post(postid_url_slug):
-#     """Return post on postid.
-
-
-#     Example:
-#     {
-#       "created": "2017-09-28 04:33:28",
-#       "imgUrl": "/uploads/122a7d27ca1d7420a1072f695d9290fad4501a41.jpg",
-#       "owner": "awdeorio",
-#       "ownerImgUrl": "/uploads/e1a7c5c32973862ee15173b0259e3efdb6a391af.jpg",
-#       "ownerShowUrl": "/users/awdeorio/",
-#       "postShowUrl": "/posts/1/",
-#       "url": "/api/v1/posts/1/"
-#     }
-#     """
-#     context = {
-#         "created": "2017-09-28 04:33:28",
-#         "imgUrl": "/uploads/122a7d27ca1d7420a1072f695d9290fad4501a41.jpg",
-#         "owner": "awdeorio",
-#         "ownerImgUrl": "/uploads/e1a7c5c32973862ee15173b0259e3efdb6a391af.jpg",
-#         "ownerShowUrl": "/users/awdeorio/",
-#         "postid": "/posts/{}/".format(postid_url_slug),
-#         "url": flask.request.path,
-#     }
-#     return flask.jsonify(**context)
-
-
-
-
-
-
 @insta485.app.route('/api/v1/likes/', methods=['POST'])
 def create_like():
     #checking authorization...
-    auth = flask.request.authorization
-    if 'username' not in flask.session and not auth:
-        flask.abort(403)
-    username = None
-    password = None
-    if auth:
+    username = flask.session.get('username')
+    if not username:
         username = flask.request.authorization['username']
         password = flask.request.authorization['password']
-    else:
-        username = flask.session.request['username']
-        password = flask.session.request['password']
+        if not username or not password:
+            return flask.jsonify({}), 400
     
     #initializing context dictionary
     context = {}
@@ -271,22 +235,15 @@ def create_like():
         return flask.jsonify(**context), 201
 
 
-
-
 # DELETE /api/v1/likes/<likeid>/
 @insta485.app.route('/api/v1/likes/<likeid>/',methods=['DELETE'])
 def delete_like(likeid):
-    auth = flask.request.authorization
-    if 'username' not in flask.session and not auth:
-        flask.abort(403)
-    username = None
-    password = None
-    if auth:
+    username = flask.session.get('username')
+    if not username:
         username = flask.request.authorization['username']
         password = flask.request.authorization['password']
-    else:
-        username = flask.session.request['username']
-        password = flask.session.request['password']
+        if not username or not password:
+            return flask.jsonify({}), 400
     
     #check if the like is already existing
     connection = insta485.model.get_db()
@@ -325,17 +282,12 @@ def delete_like(likeid):
 def create_comment():
     """return create comment """
 
-    auth = flask.request.authorization
-    if 'username' not in flask.session and not auth:
-        flask.abort(403)
-    username = None
-    password = None
-    if auth:
+    username = flask.session.get('username')
+    if not username:
         username = flask.request.authorization['username']
         password = flask.request.authorization['password']
-    else:
-        username = flask.session.request['username']
-        password = flask.session.request['password']
+        if not username or not password:
+            return flask.jsonify({}), 400
     # return username
     # username = authenticate()'last_insert_rowid()'
     #initializing context dictionary
@@ -399,17 +351,12 @@ def create_comment():
 def delete_comment(commentid):
     """delete a comment"""
     print("it is run")
-    auth = flask.request.authorization
-    if 'username' not in flask.session and not auth:
-        flask.abort(403)
-    username = None
-    password = None
-    if auth:
+    username = flask.session.get('username')
+    if not username:
         username = flask.request.authorization['username']
         password = flask.request.authorization['password']
-    else:
-        username = flask.session.request['username']
-        password = flask.session.request['password']
+        if not username or not password:
+            return flask.jsonify({}), 400
     # print(0)
     connection = insta485.model.get_db()
     cur = connection.execute(
