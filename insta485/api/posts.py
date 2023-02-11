@@ -2,6 +2,13 @@
 import flask
 import insta485
 
+
+
+
+"""REST API for posts."""
+import flask
+import insta485
+
 @insta485.app.route('/api/v1/', methods=["GET"])
 def get_services():
     # Return a list of services available. The output 
@@ -74,14 +81,19 @@ def get_post():
 
 
 @insta485.app.route('/api/v1/posts/<int:postid_url_slug>/', methods=['GET'])
-def get_single_post(postid_url_slug):
+def get_post1(postid_url_slug):
     #checking authorization...
-    username = flask.session.get('username')
-    if not username:
+    auth = flask.request.authorization
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
+    username = None
+    password = None
+    if auth:
         username = flask.request.authorization['username']
         password = flask.request.authorization['password']
-        if not username or not password:
-            return flask.jsonify({}), 400
+    else:
+        username = flask.session.request['username']
+        password = flask.session.request['password']
 
     #get post info from db
     connection = insta485.model.get_db()
@@ -167,3 +179,264 @@ def get_single_post(postid_url_slug):
     context['url'] = flask.request.path
 
     return flask.jsonify(**context)
+
+
+
+# @insta485.app.route('/api/v1/posts/<int:postid_url_slug>/')
+# def get_post(postid_url_slug):
+#     """Return post on postid.
+
+
+#     Example:
+#     {
+#       "created": "2017-09-28 04:33:28",
+#       "imgUrl": "/uploads/122a7d27ca1d7420a1072f695d9290fad4501a41.jpg",
+#       "owner": "awdeorio",
+#       "ownerImgUrl": "/uploads/e1a7c5c32973862ee15173b0259e3efdb6a391af.jpg",
+#       "ownerShowUrl": "/users/awdeorio/",
+#       "postShowUrl": "/posts/1/",
+#       "url": "/api/v1/posts/1/"
+#     }
+#     """
+#     context = {
+#         "created": "2017-09-28 04:33:28",
+#         "imgUrl": "/uploads/122a7d27ca1d7420a1072f695d9290fad4501a41.jpg",
+#         "owner": "awdeorio",
+#         "ownerImgUrl": "/uploads/e1a7c5c32973862ee15173b0259e3efdb6a391af.jpg",
+#         "ownerShowUrl": "/users/awdeorio/",
+#         "postid": "/posts/{}/".format(postid_url_slug),
+#         "url": flask.request.path,
+#     }
+#     return flask.jsonify(**context)
+
+
+
+
+
+
+@insta485.app.route('/api/v1/likes/', methods=['POST'])
+def create_like():
+    #checking authorization...
+    auth = flask.request.authorization
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
+    username = None
+    password = None
+    if auth:
+        username = flask.request.authorization['username']
+        password = flask.request.authorization['password']
+    else:
+        username = flask.session.request['username']
+        password = flask.session.request['password']
+    
+    #initializing context dictionary
+    context = {}
+
+    #getting post id
+    postid = flask.request.args.get('postid')
+
+    #check if the like is already existing
+    connection = insta485.model.get_db()
+    cur = connection.execute(
+            "SELECT * FROM likes "
+            "WHERE postid == ?"
+            "AND owner = ?",
+            (postid, username)
+        )
+    checking_likes = cur.fetchall()
+    if(len(checking_likes) != 0):
+        #If the “like” already exists, 
+        #return the like object with a 200 response.
+        likeid = checking_likes[0]['likeid']
+        url = "/api/v1/likes/{}/".format(likeid)
+        context['likeid'] = likeid
+        context['url'] = url
+        return flask.jsonify(**context), 200
+    else:
+        #Create one “like” for a specific post. Return 201 on success.
+        connection.execute(
+                "INSERT INTO likes(owner,postid) VALUES"
+                "(?,?)",
+                (username, postid)
+            )
+        find_new_like = connection.execute(
+                "SELECT * FROM likes "
+                "WHERE postid == ?",
+                (postid, )
+            )
+        like_id = find_new_like.fetchone()['likeid']
+        url = "/api/v1/likes/{}/".format(like_id)
+        context['likeid'] = like_id
+        context['url'] = url
+        return flask.jsonify(**context), 201
+
+
+
+
+# DELETE /api/v1/likes/<likeid>/
+@insta485.app.route('/api/v1/likes/<likeid>/',methods=['DELETE'])
+def delete_like(likeid):
+    auth = flask.request.authorization
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
+    username = None
+    password = None
+    if auth:
+        username = flask.request.authorization['username']
+        password = flask.request.authorization['password']
+    else:
+        username = flask.session.request['username']
+        password = flask.session.request['password']
+    
+    #check if the like is already existing
+    connection = insta485.model.get_db()
+    cur = connection.execute(
+            "SELECT * FROM likes "
+            "WHERE likeid == ?"
+            "AND owner = ?",
+            (likeid, username)
+        )
+    user_own_like = cur.fetchall()
+    connection = insta485.model.get_db()
+    cur = connection.execute(
+            "SELECT * FROM likes "
+            "WHERE likeid == ?",
+            (likeid,)
+        )
+    likeid_exist = cur.fetchall()
+    if(len(likeid_exist) == 0):
+        # If the likeid does not exist, return 404.
+        return flask.jsonify({}), 404
+    elif(len(user_own_like) == 0):
+        # If the user does not own the like, return 403.
+        return flask.jsonify({}), 403
+    else:
+        # Delete one “like”. Return 204 on success.
+        connection.execute(
+            "DELETE FROM likes "
+            "WHERE likeid == ? and owner == ?",
+            (likeid, username)
+        )
+        connection.commit()
+        return flask.jsonify({}), 204
+
+
+@insta485.app.route('/api/v1/comments/', methods=['POST'])
+def create_comment():
+    """return create comment """
+
+    auth = flask.request.authorization
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
+    username = None
+    password = None
+    if auth:
+        username = flask.request.authorization['username']
+        password = flask.request.authorization['password']
+    else:
+        username = flask.session.request['username']
+        password = flask.session.request['password']
+    # return username
+    # username = authenticate()'last_insert_rowid()'
+    #initializing context dictionary
+    context = {}
+    #get postid from url
+    postid = flask.request.args.get('postid')
+    #HINT: sqlite3 provides a special function to retrieve
+    #  the ID of the most recently inserted item: SELECT last_insert_rowid().
+    connection = insta485.model.get_db()
+    cur = connection.execute(
+        #如果一个表中有 INTEGER PRIMARY KEY 列，则该列变成 ROWID 的别名。
+        #the database is comments, so the primary key is comment id
+        "SELECT last_insert_rowid()"
+    )
+    print("THE CUR IS")
+    new_comment_id = cur.fetchall()[0]['last_insert_rowid()']
+    print(new_comment_id)
+
+    # get text from comment input box
+    text = flask.request.get_json()['text']
+    # if the comment is not inserted ????? how to know whether it is inserted or not 
+    # then return 201
+
+    # {
+    #   "commentid": 8,
+    #   "lognameOwnsThis": true,
+    #   "owner": "awdeorio",
+    #   "ownerShowUrl": "/users/awdeorio/",
+    #   "text": "Comment sent from httpie",
+    #   "url": "/api/v1/comments/8/"
+    # }
+    connection = insta485.model.get_db()
+    cur = connection.execute(
+        "INSERT INTO comments(owner,postid,text) VALUES"
+        "(?,?,?)",
+        (username, postid, text)
+    )
+    commentid = new_comment_id + 1
+    context['commentid'] = commentid
+    context['lognameOwnsThis'] = True
+    context['owner'] = username
+    context['text'] = text
+    context['url'] = "/api/v1/comments/{}/".format(commentid)
+    # input = 3
+    # cur = connection.execute(
+    #     # "INSERT INTO comments(owner,postid,text) VALUES"
+    #     # "(?,?,?)",
+    #     "SELECT * from comments WHERE postid == ?",
+    #     (input,)
+    # )
+    # print(cur.fetchall())
+    return flask.jsonify(**context), 201
+
+
+
+
+
+
+# DELETE /api/v1/comments/<commentid>/
+@insta485.app.route('/api/v1/comments/<commentid>/', methods=['DELETE'])
+def delete_comment(commentid):
+    """delete a comment"""
+    print("it is run")
+    auth = flask.request.authorization
+    if 'username' not in flask.session and not auth:
+        flask.abort(403)
+    username = None
+    password = None
+    if auth:
+        username = flask.request.authorization['username']
+        password = flask.request.authorization['password']
+    else:
+        username = flask.session.request['username']
+        password = flask.session.request['password']
+    # print(0)
+    connection = insta485.model.get_db()
+    cur = connection.execute(
+        "SELECT owner FROM comments "
+        "WHERE commentid == ?",
+        (commentid,)
+    )
+    # print(1)
+    comment_id_exist = cur.fetchall()
+    if(len(comment_id_exist) == 0):
+        # If the commentid does not exist, return 404.
+        print(2)
+        return flask.jsonify({}), 404
+    else:
+        # If the user doesn’t own the comment, return 403.
+        owner = comment_id_exist[0]["owner"]
+        print(3)
+        if owner != username:
+            return flask.jsonify({}), 403
+        else:
+            print(4)
+            # Delete a comment. Include the ID of the comment in the URL.
+            # Return 204 on success.
+            connection.execute(
+                "DELETE FROM comments "
+                "WHERE commentid == ?",
+                (commentid,)
+            )
+            connection.commit()
+            return flask.jsonify({}), 204
