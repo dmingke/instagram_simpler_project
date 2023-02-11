@@ -41,41 +41,55 @@ def get_post():
     size = flask.request.args.get("size", default=10, type=int)
     # size_if_user = flask.request.args.get("size", None)
     page = flask.request.args.get("page", default=0, type=int)
-    # page_if_user = flask.request.args.get("page", None)
+    postid_if_user = flask.request.args.get("postid_lte", None)
     if size < 0 or page < 0:
         return flask.jsonify({}), 400
     connection = insta485.model.get_db()
-    total_postid = connection.execute(
-        "SELECT postid FROM posts "
-        "where owner == ? OR "
-        "owner IN (SELECT username2 FROM following "
-        "where username1 == ?)",
-        (logname, logname, )
-    ).fetchall()
-    numPost = len(total_postid)
-    newest = total_postid[numPost-1]['postid']
-    postid_lte = flask.request.args.get("postid_lte", default=newest, type=int)
-    # postid_if_user = flask.request.args.get("page"
-    selected_postid = connection.execute(
-        "SELECT postid,  ('/api/v1/posts/' || postid || '/') AS url FROM posts "
-        "where owner == ? OR "
-        "owner IN (SELECT username2 FROM following "
-        "where username1 == ?) ORDER BY postid DESC "
-        "LIMIT ? OFFSET ?",
-        (logname, logname, size, size*page,)
-    ).fetchall()
-    # if not size_if_user and not page_if_user:
-
-    if postid_lte == newest:
+    total_post = connection.execute(
+            "SELECT postid FROM posts "
+            "where owner == ? OR "
+            "owner IN (SELECT username2 FROM following "
+            "where username1 == ?)",
+            (logname, logname, )
+        ).fetchall()
+    numPost = len(total_post)
+    newest = total_post[numPost-1]['postid']
+    # if postid_lte is not specified
+    if (postid_if_user is None):
+        # postid_if_user = flask.request.args.get("page"
+        selected_postid = connection.execute(
+            "SELECT postid,  ('/api/v1/posts/' || postid || '/') AS url FROM posts "
+            "where owner == ? OR "
+            "owner IN (SELECT username2 FROM following "
+            "where username1 == ?) ORDER BY postid DESC "
+            "LIMIT ? OFFSET ?",
+            (logname, logname, size, size*page,)
+        ).fetchall()
+        results = list(selected_postid)
         if size*(page+1) <= numPost:
             # ?????????what is the page (the max)
             next = "/api/v1/posts/?size={}&page={}&postid_lte={}".format(size, page+1,newest)
         else:
             next = ""
+    #  if specified
     else:
-        next = "/api/v1/posts/?size={}&page={}&postid_lte={}".format(size, page+1,postid_lte)
-    results = list(selected_postid)
-
+        selected = connection.execute(
+            "SELECT postid,  ('/api/v1/posts/' || postid || '/') AS url FROM posts "
+            "where (owner == ? OR "
+            "owner IN (SELECT username2 FROM following "
+            "where username1 == ?)) "
+            "AND postid < ? ORDER BY postid DESC ",
+            (logname, logname, postid_if_user,)
+        ).fetchall()
+        results = []
+        for id in selected:
+            if int(postid_if_user)-size*page >= 0:
+                if int(id['postid']) <= int(postid_if_user)-size*page:
+                    results.append(id)
+        if size*(page+1) + 1 <= numPost:
+            next = "/api/v1/posts/?size={}&page={}&postid_lte={}".format(size, page+1,newest)
+        else:
+            next = ""
     context = {
         "next": next,
         "results": results,
