@@ -18,8 +18,9 @@ def get_services():
         "comments": "/api/v1/comments/",
         "likes": "/api/v1/likes/",
         "posts": "/api/v1/posts/",
-        "url":  flask.request.full_path
+        "url":  flask.request.full_path[:-1]
     }
+    print(context)
     return flask.jsonify(**context), 200
 
 @insta485.app.route('/api/v1/posts/', methods=["GET"])
