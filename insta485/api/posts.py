@@ -148,7 +148,6 @@ def get_post1(postid_url_slug):
         (postid_url_slug, )
     )
     like_condition = cur.fetchall()
-    print(like_condition)
     likes_dict = {}
     if(len(like_condition) == 0):
         numlikes = 0
