@@ -2,13 +2,6 @@
 import flask
 import insta485
 
-
-
-
-"""REST API for posts."""
-import flask
-import insta485
-
 @insta485.app.route('/api/v1/', methods=["GET"])
 def get_services():
     # Return a list of services available. The output 
@@ -211,6 +204,7 @@ def get_post1(postid_url_slug):
 
     return flask.jsonify(**context)
 
+
 @insta485.app.route('/api/v1/likes/', methods=['POST'])
 def create_like():
     #checking authorization...
@@ -376,10 +370,6 @@ def create_comment():
     # )
     # print(cur.fetchall())
     return flask.jsonify(**context), 201
-
-
-
-
 
 
 # DELETE /api/v1/comments/<commentid>/
