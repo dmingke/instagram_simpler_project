@@ -74,13 +74,13 @@ def get_post():
 
 
 @insta485.app.route('/api/v1/posts/<int:postid_url_slug>/', methods=['GET'])
-def get_post(postid_url_slug):
+def get_single_post(postid_url_slug):
     #checking authorization...
-    logname = flask.session.get('username')
-    if not logname:
-        logname = flask.request.authorization['username']
+    username = flask.session.get('username')
+    if not username:
+        username = flask.request.authorization['username']
         password = flask.request.authorization['password']
-        if not logname or not password:
+        if not username or not password:
             return flask.jsonify({}), 400
 
     #get post info from db
