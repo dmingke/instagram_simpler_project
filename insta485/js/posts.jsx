@@ -54,7 +54,7 @@ export default function Posts({ url }) {
   }, [url]);
 
     return (
-        <PostList postList={results}></PostList>
+        <PostList postlist={results}></PostList>
         // <div>
         //     {results}
         // </div>
