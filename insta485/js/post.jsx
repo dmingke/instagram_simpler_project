@@ -100,7 +100,7 @@ function Post({props}){
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({})
             };
-            console.log(likeURL)
+            // console.log(likeURL)
             // useEffect(() => {
             fetch("/api/v1/likes/", requestOptions,{ credentials: 'same-origin' })
             .then((response) => {
@@ -109,11 +109,17 @@ function Post({props}){
             })
           }
           else{
+            let link = "/api/v1/likes/" + String(postid) + "/"
             const requestOptions = {
               method: 'DELETE',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({})
             };
+            fetch(link, requestOptions,{ credentials: 'same-origin' })
+            .then((response) => {
+                if (!response.ok) throw Error(response.statusText);
+                return response.json();
+            })
           }
           setLiked(!liked)
       }

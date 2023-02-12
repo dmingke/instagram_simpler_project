@@ -230,7 +230,7 @@ function Post(_ref2) {
         },
         body: JSON.stringify({})
       };
-      console.log(likeURL);
+      // console.log(likeURL)
       // useEffect(() => {
       fetch("/api/v1/likes/", requestOptions, {
         credentials: 'same-origin'
@@ -239,6 +239,7 @@ function Post(_ref2) {
         return response.json();
       });
     } else {
+      var _link = "/api/v1/likes/" + String(postid) + "/";
       var _requestOptions = {
         method: 'DELETE',
         headers: {
@@ -246,6 +247,12 @@ function Post(_ref2) {
         },
         body: JSON.stringify({})
       };
+      fetch(_link, _requestOptions, {
+        credentials: 'same-origin'
+      }).then(function (response) {
+        if (!response.ok) throw Error(response.statusText);
+        return response.json();
+      });
     }
     setLiked(!liked);
   }
