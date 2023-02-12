@@ -45,7 +45,8 @@ function Post({props}){
       const [likes,setLikes] = useState({});
       const [ownerShowUrl, setOwnerUrl] = useState('');
       const [postShowUrl, setPostUrl] = useState('');
-      
+      const [liked, setLiked] = useState(false);
+      const [numLikes, setnumLikes] = useState(0);
 
       useEffect(()=> {
         let ignoreStaleRequest = false;
@@ -75,12 +76,18 @@ function Post({props}){
       }, [props]);
       // let likes = 
       const time = moment(created).fromNow();
+      // code for updating like/unlike buttons
+      function handleLikeClick() {
+          setLiked(!liked);
+      }
+      // end
       return(
         <div>
            <a href={ownerShowUrl}><img src={ownerImgUrl} alt="men 1" width="50px" height="46px"/></a>
            <a href={ownerShowUrl}>{owner}</a>
           <a href={postShowUrl}>{time}</a>
           <div><img src={imgUrl} alt="post_image" width="396px" height="350px"/></div>
+          <button onClick={handleLikeClick}>{liked ? 'unlike' : 'like'}</button>
           {likes.numLikes} <p>likes</p>
           {/* {comments.map((comment)=><{result.url}/>)} */}
           <b><a href={comments.owner}>{comments.owner}</a></b>{comments.text}
