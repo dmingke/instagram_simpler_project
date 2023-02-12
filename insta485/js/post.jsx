@@ -51,6 +51,7 @@ function Post({props}){
 
       const [postid,setPostid] = useState(0);
       const [comments_url,setCommentsUrl] = useState("")
+      const [numLikes,setNumLikes] = useState(0)
       
 
       useEffect(()=> {
@@ -75,6 +76,7 @@ function Post({props}){
           setLiked(data.likes.numLikes)
           setPostid(data.postid)
           setLikeUrl(data.likes.url)
+          setNumLikes(data.likes.numLikes)
           }
         })
       .catch(error => console.log(error));
@@ -84,41 +86,50 @@ function Post({props}){
         };
       }, [props]);
       // let likes = 
-      const link = "/api/v1/likes/" + String(postid)
+      // const link = "/api/v1/likes/" + String(postid)
       const time = moment(created).fromNow();
-      console.log(link)
+      // console.log(link)
 
       // data=json.dumps({"text": "new comment"}),
       //   headers={"Authorization": f"Basic {credentials}"},
       //   content_type="application/json")
 
       // like button section
-      function handleLiked(){
+      function HandleLiked(){
+          // const [likid, setlikeid] = useState(-1);
           if (!liked){
             const requestOptions = {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({})
             };
-            // console.log(likeURL)
-            // useEffect(() => {
-            fetch("/api/v1/likes/", requestOptions,{ credentials: 'same-origin' })
+            const linkPostLike = "/api/v1/likes/?postid=" + String(postid)
+            fetch(linkPostLike, requestOptions,{ credentials: 'same-origin' })
             .then((response) => {
                 if (!response.ok) throw Error(response.statusText);
                 return response.json();
             })
+            // .then((data) => {
+                // setlikeid(data.likeid)
+              // })
           }
           else{
-            let link = "/api/v1/likes/" + String(postid) + "/"
-            const requestOptions = {
-              method: 'DELETE',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({})
-            };
-            fetch(link, requestOptions)
+            let link = likeURL
+            // if(likid !== -1){
+              // link = "/api/v1/likes/" + likid
+            // }
+            // const requestOptions = {
+              // method: 'DELETE',
+              // headers: { 'Content-Type': 'application/json' },
+              // body: JSON.stringify({})
+            // };
+            fetch(link, { credentials: 'same-origin' , method: 'DELETE'})
             .then((response) => {
                 if (!response.ok) throw Error(response.statusText);
                 return response.json();
+            })
+            .then((data)=>{
+              setNumLikes(prevNums => prevNums - 1 )
             })
           }
           setLiked(!liked)
@@ -181,8 +192,8 @@ function Post({props}){
           <a href={ownerShowUrl}>{owner}</a>
           <a href={postShowUrl}>{time}</a>
           <div><img src={imgUrl} alt="post_image" width="396px" height="350px"/></div>
-          {likes.numLikes} <p>likes</p>
-          <button onClick={handleLiked}>{liked ? 'unlike' : 'like'}</button>
+          {numLikes} <p>likes</p>
+          <button onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
           {/* {comments.map((comment)=><{result.url}/>)} */}
           
           {/* <b><a href={comments.owner}>{comments.owner}</a></b>{comments.text} */}

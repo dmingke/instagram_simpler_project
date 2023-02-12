@@ -255,6 +255,7 @@ def create_like():
             )
         like_id = find_new_like.fetchone()['likeid']
         url = "/api/v1/likes/{}/".format(like_id)
+        print("created ",url)
         context['likeid'] = like_id
         context['url'] = url
         return flask.jsonify(**context), 201
@@ -272,7 +273,6 @@ def delete_like(likeid):
         password = flask.request.authorization['password']
         if not username or not password:
             return flask.jsonify({}), 400
-    
     #check if the like is already existing
     connection = insta485.model.get_db()
     cur = connection.execute(
@@ -303,6 +303,7 @@ def delete_like(likeid):
             (likeid, username)
         )
         connection.commit()
+        print("deleted ",likeid)
         return flask.jsonify({}), 204
 
 

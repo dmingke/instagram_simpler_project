@@ -181,6 +181,10 @@ function Post(_ref2) {
     _useState26 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState25, 2),
     comments_url = _useState26[0],
     setCommentsUrl = _useState26[1];
+  var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(0),
+    _useState28 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState27, 2),
+    numLikes = _useState28[0],
+    setNumLikes = _useState28[1];
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(function () {
     var ignoreStaleRequest = false;
     fetch(props, {
@@ -203,6 +207,7 @@ function Post(_ref2) {
         setLiked(data.likes.numLikes);
         setPostid(data.postid);
         setLikeUrl(data.likes.url);
+        setNumLikes(data.likes.numLikes);
       }
     })["catch"](function (error) {
       return console.log(error);
@@ -212,16 +217,17 @@ function Post(_ref2) {
     };
   }, [props]);
   // let likes = 
-  var link = "/api/v1/likes/" + String(postid);
+  // const link = "/api/v1/likes/" + String(postid)
   var time = moment__WEBPACK_IMPORTED_MODULE_3___default()(created).fromNow();
-  console.log(link);
+  // console.log(link)
 
   // data=json.dumps({"text": "new comment"}),
   //   headers={"Authorization": f"Basic {credentials}"},
   //   content_type="application/json")
 
   // like button section
-  function handleLiked() {
+  function HandleLiked() {
+    // const [likid, setlikeid] = useState(-1);
     if (!liked) {
       var requestOptions = {
         method: 'POST',
@@ -230,26 +236,36 @@ function Post(_ref2) {
         },
         body: JSON.stringify({})
       };
-      // console.log(likeURL)
-      // useEffect(() => {
-      fetch("/api/v1/likes/", requestOptions, {
+      var linkPostLike = "/api/v1/likes/?postid=" + String(postid);
+      fetch(linkPostLike, requestOptions, {
         credentials: 'same-origin'
       }).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
       });
+      // .then((data) => {
+      // setlikeid(data.likeid)
+      // })
     } else {
-      var _link = "/api/v1/likes/" + String(postid) + "/";
-      var _requestOptions = {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
-      };
-      fetch(_link, _requestOptions).then(function (response) {
+      var link = likeURL;
+      // if(likid !== -1){
+      // link = "/api/v1/likes/" + likid
+      // }
+      // const requestOptions = {
+      // method: 'DELETE',
+      // headers: { 'Content-Type': 'application/json' },
+      // body: JSON.stringify({})
+      // };
+      fetch(link, {
+        credentials: 'same-origin',
+        method: 'DELETE'
+      }).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
+      }).then(function (data) {
+        setNumLikes(function (prevNums) {
+          return prevNums - 1;
+        });
       });
     }
     setLiked(!liked);
@@ -320,8 +336,8 @@ function Post(_ref2) {
     alt: "post_image",
     width: "396px",
     height: "350px"
-  })), likes.numLikes, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("p", null, "likes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("button", {
-    onClick: handleLiked
+  })), numLikes, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("p", null, "likes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("button", {
+    onClick: HandleLiked
   }, liked ? 'unlike' : 'like'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement(_comments__WEBPACK_IMPORTED_MODULE_4__["default"], {
     comments: comments,
     changeComment: changeComment
