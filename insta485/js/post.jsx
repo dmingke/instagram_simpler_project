@@ -115,7 +115,7 @@ function Post({props}){
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({})
             };
-            fetch(link, requestOptions,{ credentials: 'same-origin' })
+            fetch(link, requestOptions)
             .then((response) => {
                 if (!response.ok) throw Error(response.statusText);
                 return response.json();

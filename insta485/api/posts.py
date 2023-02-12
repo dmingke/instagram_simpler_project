@@ -183,7 +183,7 @@ def get_post1(postid_url_slug):
         else:
             #If the logged in user does not like the post
             #then the like url should be null
-            like_url = null
+            like_url = None
         likes_dict['url'] = like_url
         likes_dict['lognameLikesThis'] = login_user_liked
         likes_dict['numLikes'] = numlikes

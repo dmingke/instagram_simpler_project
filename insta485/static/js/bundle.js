@@ -247,9 +247,7 @@ function Post(_ref2) {
         },
         body: JSON.stringify({})
       };
-      fetch(_link, _requestOptions, {
-        credentials: 'same-origin'
-      }).then(function (response) {
+      fetch(_link, _requestOptions).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
       });
