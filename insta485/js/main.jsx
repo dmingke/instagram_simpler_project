@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import Posts from "./posts";
+import Posts from "./post";
 
 
 // Create a root
