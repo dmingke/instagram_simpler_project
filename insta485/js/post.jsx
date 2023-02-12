@@ -84,7 +84,7 @@ function Post({props}){
       return () => {
             ignoreStaleRequest = true;
         };
-      }, [props]);
+      }, [props,liked]);
       // let likes = 
       // const link = "/api/v1/likes/" + String(postid)
       const time = moment(created).fromNow();
@@ -132,7 +132,8 @@ function Post({props}){
               setNumLikes(prevNums => prevNums - 1 )
             })
           }
-          setLiked(!liked)
+          let likechange = !liked
+          setLiked(likechange)
       }
 
       // end like button

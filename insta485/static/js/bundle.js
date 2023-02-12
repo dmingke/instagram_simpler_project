@@ -215,7 +215,7 @@ function Post(_ref2) {
     return function () {
       ignoreStaleRequest = true;
     };
-  }, [props]);
+  }, [props, liked]);
   // let likes = 
   // const link = "/api/v1/likes/" + String(postid)
   var time = moment__WEBPACK_IMPORTED_MODULE_3___default()(created).fromNow();
@@ -268,7 +268,8 @@ function Post(_ref2) {
         });
       });
     }
-    setLiked(!liked);
+    var likechange = !liked;
+    setLiked(likechange);
   }
 
   // end like button
