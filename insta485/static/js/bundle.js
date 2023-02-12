@@ -17,11 +17,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Comment(_ref) {
-  var comment = _ref.comment;
-  console.log(comment);
+  var comment = _ref.comment,
+    changeComment = _ref.changeComment;
+  var comment_button;
+  function deleteComment() {
+    changeComment(comment.commenturl);
+  }
+  if (comment.lognameOwnsThis) {
+    comment_button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      onclick: deleteComment
+    }, "delete");
+  }
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
     href: comment.ownerShowUrl
-  }, comment.owner)), comment.text);
+  }, comment.owner)), comment.text, comment_button);
 }
 
 /***/ }),
@@ -44,12 +53,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Comments(_ref) {
-  var comments = _ref.comments;
+  var comments = _ref.comments,
+    changeComment = _ref.changeComment;
   return comments.map(function (comment) {
     console.log(comment);
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_comment__WEBPACK_IMPORTED_MODULE_1__["default"], {
       key: comment.id,
-      comment: comment
+      comment: comment,
+      changeComment: changeComment
     });
   });
 }
@@ -154,12 +165,16 @@ function Post(_ref2) {
     _useState18 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState17, 2),
     postShowUrl = _useState18[0],
     setPostUrl = _useState18[1];
+  var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false),
+    _useState20 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState19, 2),
+    liked = _useState20[0],
+    setLiked = _useState20[1];
 
   // const [postid,setPostid] = useState(0);
-  var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(""),
-    _useState20 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState19, 2),
-    comments_url = _useState20[0],
-    setCommentsUrl = _useState20[1];
+  var _useState21 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(""),
+    _useState22 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState21, 2),
+    comments_url = _useState22[0],
+    setCommentsUrl = _useState22[1];
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(function () {
     var ignoreStaleRequest = false;
     fetch(props, {
@@ -193,6 +208,11 @@ function Post(_ref2) {
   // data=json.dumps({"text": "new comment"}),
   //   headers={"Authorization": f"Basic {credentials}"},
   //   content_type="application/json")
+
+  // like button section
+  function handleLiked() {
+    setLiked(!liked);
+  }
 
   // change when we comment
   function handleChange(event) {
@@ -257,7 +277,9 @@ function Post(_ref2) {
     alt: "post_image",
     width: "396px",
     height: "350px"
-  })), likes.numLikes, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("p", null, "likes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement(_comments__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  })), likes.numLikes, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("p", null, "likes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("button", {
+    onClick: handleLiked
+  }, liked ? 'unlike' : 'like'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement(_comments__WEBPACK_IMPORTED_MODULE_4__["default"], {
     comments: comments,
     changeComment: changeComment
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("input", {

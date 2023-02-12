@@ -46,6 +46,7 @@ function Post({props}){
       const [likes,setLikes] = useState({});
       const [ownerShowUrl, setOwnerUrl] = useState('');
       const [postShowUrl, setPostUrl] = useState('');
+      const [liked, setLiked] = useState(false);
 
       // const [postid,setPostid] = useState(0);
       const [comments_url,setCommentsUrl] = useState("")
@@ -86,6 +87,10 @@ function Post({props}){
       //   headers={"Authorization": f"Basic {credentials}"},
       //   content_type="application/json")
 
+      // like button section
+      function handleLiked(){
+          setLiked(!liked)
+      }
 
 
 
@@ -145,6 +150,7 @@ function Post({props}){
           <a href={postShowUrl}>{time}</a>
           <div><img src={imgUrl} alt="post_image" width="396px" height="350px"/></div>
           {likes.numLikes} <p>likes</p>
+          <button onClick={handleLiked}>{liked ? 'unlike' : 'like'}</button>
           {/* {comments.map((comment)=><{result.url}/>)} */}
           
           {/* <b><a href={comments.owner}>{comments.owner}</a></b>{comments.text} */}
