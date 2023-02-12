@@ -204,7 +204,7 @@ function Post(_ref2) {
         setOwnerUrl(data.ownerShowUrl);
         setPostUrl(data.postShowUrl);
         setCommentsUrl(data.comments_url);
-        setLiked(data.likes.numLikes);
+        setLiked(data.likes.lognameLikesThis);
         setPostid(data.postid);
         setLikeUrl(data.likes.url);
         setNumLikes(data.likes.numLikes);
@@ -262,7 +262,7 @@ function Post(_ref2) {
       }).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
-      }).then(function (data) {
+      }).then(function () {
         setNumLikes(function (prevNums) {
           return prevNums - 1;
         });

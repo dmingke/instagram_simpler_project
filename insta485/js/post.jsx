@@ -73,7 +73,7 @@ function Post({props}){
           setOwnerUrl(data.ownerShowUrl)
           setPostUrl(data.postShowUrl)
           setCommentsUrl(data.comments_url)
-          setLiked(data.likes.numLikes)
+          setLiked(data.likes.lognameLikesThis)
           setPostid(data.postid)
           setLikeUrl(data.likes.url)
           setNumLikes(data.likes.numLikes)
@@ -114,7 +114,7 @@ function Post({props}){
               // })
           }
           else{
-            let link = likeURL
+            const link = likeURL
             // if(likid !== -1){
               // link = "/api/v1/likes/" + likid
             // }
@@ -128,7 +128,7 @@ function Post({props}){
                 if (!response.ok) throw Error(response.statusText);
                 return response.json();
             })
-            .then((data)=>{
+            .then(()=>{
               setNumLikes(prevNums => prevNums - 1 )
             })
           }
