@@ -84,7 +84,7 @@ function Post({props}){
       return () => {
             ignoreStaleRequest = true;
         };
-      }, [props,liked]);
+      }, [props]);
       // let likes = 
       // const link = "/api/v1/likes/" + String(postid)
       const time = moment(created).fromNow();
@@ -109,6 +109,23 @@ function Post({props}){
                 if (!response.ok) throw Error(response.statusText);
                 return response.json();
             })
+            .then((data)=>{
+              let tempurl = String(data.likeid)
+              setLikeUrl(prevnum =>{
+                const newlikenum = "/api/v1/likes/" + tempurl + "/";
+                return newlikenum
+              })
+          
+            })
+            .then(()=>{
+              
+              setNumLikes(prevnum =>{
+                const newlikenum = prevnum + 1;
+                return newlikenum
+              })
+          
+            })
+
             // .then((data) => {
                 // setlikeid(data.likeid)
               // })
@@ -124,12 +141,12 @@ function Post({props}){
               // body: JSON.stringify({})
             // };
             fetch(link, { credentials: 'same-origin' , method: 'DELETE'})
-            .then((response) => {
-                if (!response.ok) throw Error(response.statusText);
-                return response.json();
-            })
             .then(()=>{
-              setNumLikes(prevNums => prevNums - 1 )
+                setNumLikes(prevnum =>{
+                  const newlikenu = prevnum - 1;
+                  return newlikenu
+                })
+            
             })
           }
           let likechange = !liked

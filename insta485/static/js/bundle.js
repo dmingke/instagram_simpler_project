@@ -215,7 +215,7 @@ function Post(_ref2) {
     return function () {
       ignoreStaleRequest = true;
     };
-  }, [props, liked]);
+  }, [props]);
   // let likes = 
   // const link = "/api/v1/likes/" + String(postid)
   var time = moment__WEBPACK_IMPORTED_MODULE_3___default()(created).fromNow();
@@ -242,7 +242,19 @@ function Post(_ref2) {
       }).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
+      }).then(function (data) {
+        var tempurl = String(data.likeid);
+        setLikeUrl(function (prevnum) {
+          var newlikenum = "/api/v1/likes/" + tempurl + "/";
+          return newlikenum;
+        });
+      }).then(function () {
+        setNumLikes(function (prevnum) {
+          var newlikenum = prevnum + 1;
+          return newlikenum;
+        });
       });
+
       // .then((data) => {
       // setlikeid(data.likeid)
       // })
@@ -259,12 +271,10 @@ function Post(_ref2) {
       fetch(link, {
         credentials: 'same-origin',
         method: 'DELETE'
-      }).then(function (response) {
-        if (!response.ok) throw Error(response.statusText);
-        return response.json();
       }).then(function () {
-        setNumLikes(function (prevNums) {
-          return prevNums - 1;
+        setNumLikes(function (prevnum) {
+          var newlikenu = prevnum - 1;
+          return newlikenu;
         });
       });
     }
