@@ -154,6 +154,8 @@ function Post(_ref2) {
     _useState18 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState17, 2),
     postShowUrl = _useState18[0],
     setPostUrl = _useState18[1];
+
+  // const [postid,setPostid] = useState(0);
   var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(""),
     _useState20 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState19, 2),
     comments_url = _useState20[0],
@@ -188,7 +190,10 @@ function Post(_ref2) {
   // let likes = 
   var time = moment__WEBPACK_IMPORTED_MODULE_3___default()(created).fromNow();
 
-  // commment
+  // data=json.dumps({"text": "new comment"}),
+  //   headers={"Authorization": f"Basic {credentials}"},
+  //   content_type="application/json")
+
   // change when we comment
   function handleChange(event) {
     event.preventDefault();
@@ -220,6 +225,22 @@ function Post(_ref2) {
       console.log("hihihihihihihi");
     }
   }
+
+  // POST /api/v1/comments/?postid=<postid></postid>
+
+  function changeComment(commenturl) {
+    // const requestOptions = {
+    //   method: 'DELETE',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   // body: JSON.stringify({ text: newtext })
+    // };
+    console.log("It is called");
+    fetch(commenturl, {
+      method: 'DELETE'
+    }).then(function () {
+      console.log("delete successfully");
+    });
+  }
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("a", {
     href: ownerShowUrl
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("img", {
@@ -236,7 +257,13 @@ function Post(_ref2) {
     alt: "post_image",
     width: "396px",
     height: "350px"
-  })), likes.numLikes, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("p", null, "likes"));
+  })), likes.numLikes, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("p", null, "likes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement(_comments__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    comments: comments,
+    changeComment: changeComment
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("input", {
+    onChange: handleChange,
+    type: "text"
+  }));
 }
 Posts.propTypes = {
   url: (prop_types__WEBPACK_IMPORTED_MODULE_5___default().string.isRequired)
