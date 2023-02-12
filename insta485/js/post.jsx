@@ -47,8 +47,9 @@ function Post({props}){
       const [ownerShowUrl, setOwnerUrl] = useState('');
       const [postShowUrl, setPostUrl] = useState('');
       const [liked, setLiked] = useState(false);
+      const [likeURL, setLikeUrl] = useState('');
 
-      // const [postid,setPostid] = useState(0);
+      const [postid,setPostid] = useState(0);
       const [comments_url,setCommentsUrl] = useState("")
       
 
@@ -72,6 +73,8 @@ function Post({props}){
           setPostUrl(data.postShowUrl)
           setCommentsUrl(data.comments_url)
           setLiked(data.likes.numLikes)
+          setPostid(data.postid)
+          setLikeUrl(data.likes.url)
           }
         })
       .catch(error => console.log(error));
@@ -81,8 +84,9 @@ function Post({props}){
         };
       }, [props]);
       // let likes = 
+      const link = "/api/v1/likes/" + String(postid)
       const time = moment(created).fromNow();
-
+      console.log(link)
 
       // data=json.dumps({"text": "new comment"}),
       //   headers={"Authorization": f"Basic {credentials}"},
@@ -90,10 +94,31 @@ function Post({props}){
 
       // like button section
       function handleLiked(){
+          if (!liked){
+            const requestOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({})
+            };
+            console.log(likeURL)
+            // useEffect(() => {
+            fetch("/api/v1/likes/", requestOptions,{ credentials: 'same-origin' })
+            .then((response) => {
+                if (!response.ok) throw Error(response.statusText);
+                return response.json();
+            })
+          }
+          else{
+            const requestOptions = {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({})
+            };
+          }
           setLiked(!liked)
       }
 
-
+      // end like button
 
       // change when we comment
       function handleChange(event) {

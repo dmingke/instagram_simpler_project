@@ -169,12 +169,18 @@ function Post(_ref2) {
     _useState20 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState19, 2),
     liked = _useState20[0],
     setLiked = _useState20[1];
-
-  // const [postid,setPostid] = useState(0);
-  var _useState21 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(""),
+  var _useState21 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(''),
     _useState22 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState21, 2),
-    comments_url = _useState22[0],
-    setCommentsUrl = _useState22[1];
+    likeURL = _useState22[0],
+    setLikeUrl = _useState22[1];
+  var _useState23 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(0),
+    _useState24 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState23, 2),
+    postid = _useState24[0],
+    setPostid = _useState24[1];
+  var _useState25 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(""),
+    _useState26 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState25, 2),
+    comments_url = _useState26[0],
+    setCommentsUrl = _useState26[1];
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(function () {
     var ignoreStaleRequest = false;
     fetch(props, {
@@ -195,6 +201,8 @@ function Post(_ref2) {
         setPostUrl(data.postShowUrl);
         setCommentsUrl(data.comments_url);
         setLiked(data.likes.numLikes);
+        setPostid(data.postid);
+        setLikeUrl(data.likes.url);
       }
     })["catch"](function (error) {
       return console.log(error);
@@ -204,7 +212,9 @@ function Post(_ref2) {
     };
   }, [props]);
   // let likes = 
+  var link = "/api/v1/likes/" + String(postid);
   var time = moment__WEBPACK_IMPORTED_MODULE_3___default()(created).fromNow();
+  console.log(link);
 
   // data=json.dumps({"text": "new comment"}),
   //   headers={"Authorization": f"Basic {credentials}"},
@@ -212,8 +222,35 @@ function Post(_ref2) {
 
   // like button section
   function handleLiked() {
+    if (!liked) {
+      var requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      };
+      console.log(likeURL);
+      // useEffect(() => {
+      fetch("/api/v1/likes/", requestOptions, {
+        credentials: 'same-origin'
+      }).then(function (response) {
+        if (!response.ok) throw Error(response.statusText);
+        return response.json();
+      });
+    } else {
+      var _requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      };
+    }
     setLiked(!liked);
   }
+
+  // end like button
 
   // change when we comment
   function handleChange(event) {
