@@ -194,6 +194,7 @@ function Post(_ref2) {
         setOwnerUrl(data.ownerShowUrl);
         setPostUrl(data.postShowUrl);
         setCommentsUrl(data.comments_url);
+        setLiked(data.likes.numLikes);
       }
     })["catch"](function (error) {
       return console.log(error);

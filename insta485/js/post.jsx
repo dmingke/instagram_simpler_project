@@ -71,6 +71,7 @@ function Post({props}){
           setOwnerUrl(data.ownerShowUrl)
           setPostUrl(data.postShowUrl)
           setCommentsUrl(data.comments_url)
+          setLiked(data.likes.numLikes)
           }
         })
       .catch(error => console.log(error));
