@@ -225,7 +225,7 @@ function Post(_ref2) {
   //   headers={"Authorization": f"Basic {credentials}"},
   //   content_type="application/json")
 
-  // like button section
+  // like button section ^_^ 1
   function HandleLiked() {
     // const [likid, setlikeid] = useState(-1);
     if (!liked) {
@@ -282,7 +282,7 @@ function Post(_ref2) {
     setLiked(likechange);
   }
 
-  // end like button
+  // end like button ^_^ 1
 
   // change when we comment
   function handleChange(event) {
@@ -331,6 +331,46 @@ function Post(_ref2) {
       console.log("delete successfully");
     });
   }
+  // started working on double click ^_^ 2
+  function handleDoubleClick() {
+    // console.log("double click successfully")
+    if (!liked) {
+      console.log("double click successfully");
+      var requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      };
+      var linkPostLike = "/api/v1/likes/?postid=" + String(postid);
+      fetch(linkPostLike, requestOptions, {
+        credentials: 'same-origin'
+      }).then(function (response) {
+        if (!response.ok) throw Error(response.statusText);
+        return response.json();
+      }).then(function (data) {
+        var tempurl = String(data.likeid);
+        setLikeUrl(function (prevnum) {
+          var newlikenum = "/api/v1/likes/" + tempurl + "/";
+          return newlikenum;
+        });
+      }).then(function () {
+        setNumLikes(function (prevnum) {
+          var newlikenum = prevnum + 1;
+          return newlikenum;
+        });
+      }).then(function () {
+        setLiked(function (prevnum) {
+          var newlikenum = true;
+          return newlikenum;
+        });
+      });
+    }
+    // let likechange = !liked
+    // setLiked(likechange)
+  }
+  // end double click ^_^ 2
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("a", {
     href: ownerShowUrl
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("img", {
@@ -344,6 +384,7 @@ function Post(_ref2) {
     href: postShowUrl
   }, time), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("img", {
     src: imgUrl,
+    onDoubleClick: handleDoubleClick,
     alt: "post_image",
     width: "396px",
     height: "350px"
