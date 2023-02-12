@@ -46,7 +46,7 @@ function Post({props}){
       const [likes,setLikes] = useState({});
       const [ownerShowUrl, setOwnerUrl] = useState('');
       const [postShowUrl, setPostUrl] = useState('');
-      
+      const [comments_url,setCommentsUrl] = useState("")
 
       useEffect(()=> {
         let ignoreStaleRequest = false;
@@ -77,22 +77,54 @@ function Post({props}){
       }, [props]);
       // let likes = 
       const time = moment(created).fromNow();
+
+      // commment
+      // change when we comment
+      function handleChange(event) {
+          event.preventDefault()
+          // var key = event.key;
+          const newtext = event.target.value;
+          const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: newtext })
+        };
+              
+        var key = event.key;
+        if (key == "Enter") {
+          fetch(comments_url, requestOptions,{ credentials: 'same-origin' })
+          .then((response) => {
+            if (!response.ok) throw Error(response.statusText);
+            return response.json();
+          })
+          .then((data)=>{
+              setComments(prevComments =>{
+                return [...prevComments,data]
+              })
+          })
+        }else{
+          console.log(key)
+          console.log("hihihihihihihi")
+        }
+              
+      
+      }
       return(
         <div>
           <a href={ownerShowUrl}><img src={ownerImgUrl} alt="men 1" width="50px" height="46px"/></a>
           <a href={ownerShowUrl}>{owner}</a>
           <a href={postShowUrl}>{time}</a>
           <div><img src={imgUrl} alt="post_image" width="396px" height="350px"/></div>
-          <button onClick={handleLikeClick}>{liked ? 'unlike' : 'like'}</button>
+          {/* <button onClick={handleLikeClick}>{liked ? 'unlike' : 'like'}</button> */}
           {likes.numLikes} <p>likes</p>
           {/* {comments.map((comment)=><{result.url}/>)} */}
           
           {/* <b><a href={comments.owner}>{comments.owner}</a></b>{comments.text} */}
-          <Comments comments={comments}></Comments>
+          {/* <Comments comments={comments}></Comments> */}
           {/* 是不是得判断你是不是login user？ */}
           {/* 让不让用ref */}
-          {/* e.preventDefault(); 加在哪里？？？？？*/}
-          <input onChange={handleChange} type="text"></input>
+          {/* e.preventDefault(); 加在哪里？？？？？ */}
+          {/* <input onChange={handleChange} type="text"></input> */}
         </div>
     );
       
