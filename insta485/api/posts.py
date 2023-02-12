@@ -259,10 +259,10 @@ def create_like():
                 "WHERE postid == ?",
                 (postid, )
             )
-        print(test.fetchall())
+        # print(test.fetchall())
         like_id = find_new_like.fetchone()['likeid']
         url = "/api/v1/likes/{}/".format(like_id)
-        print("created ",url)
+        # print("created ",url)
         context['likeid'] = like_id
         context['url'] = url
         return flask.jsonify(**context), 201
@@ -273,7 +273,7 @@ def create_like():
 def delete_like(likeid):
     auth = flask.request.authorization
     if 'username' not in flask.session and not auth:
-        print("test1")
+        # print("test1")
         flask.abort(403)
     username = flask.session.get('username')
     if not username:
@@ -302,8 +302,8 @@ def delete_like(likeid):
         return flask.jsonify({}), 404
     elif(len(user_own_like) == 0):
         # If the user does not own the like, return 403.
-        print(likeid_exist)
-        print("test2")  
+        # print(likeid_exist)
+        # print("test2")  
         return flask.jsonify({}), 403
     else:
         # Delete one “like”. Return 204 on success.
@@ -313,7 +313,7 @@ def delete_like(likeid):
             (likeid, username)
         )
         connection.commit()
-        print("deleted ",likeid)
+        # print("deleted ",likeid)
         return flask.jsonify({}), 204
 
 
