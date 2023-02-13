@@ -183,7 +183,7 @@ def get_post1(postid_url_slug):
         else:
             #If the logged in user does not like the post
             #then the like url should be null
-            like_url = None
+            like_url = null
         likes_dict['url'] = like_url
         likes_dict['lognameLikesThis'] = login_user_liked
         likes_dict['numLikes'] = numlikes
@@ -250,19 +250,11 @@ def create_like():
             )
         find_new_like = connection.execute(
                 "SELECT * FROM likes "
-                "WHERE postid == ?"
-                "AND owner = ?",
-                (postid, username)
-            )
-        test = connection.execute(
-                "SELECT * FROM likes "
                 "WHERE postid == ?",
                 (postid, )
             )
-        # print(test.fetchall())
         like_id = find_new_like.fetchone()['likeid']
         url = "/api/v1/likes/{}/".format(like_id)
-        # print("created ",url)
         context['likeid'] = like_id
         context['url'] = url
         return flask.jsonify(**context), 201
@@ -273,7 +265,6 @@ def create_like():
 def delete_like(likeid):
     auth = flask.request.authorization
     if 'username' not in flask.session and not auth:
-        # print("test1")
         flask.abort(403)
     username = flask.session.get('username')
     if not username:
@@ -281,6 +272,7 @@ def delete_like(likeid):
         password = flask.request.authorization['password']
         if not username or not password:
             return flask.jsonify({}), 400
+    
     #check if the like is already existing
     connection = insta485.model.get_db()
     cur = connection.execute(
@@ -302,8 +294,6 @@ def delete_like(likeid):
         return flask.jsonify({}), 404
     elif(len(user_own_like) == 0):
         # If the user does not own the like, return 403.
-        # print(likeid_exist)
-        # print("test2")  
         return flask.jsonify({}), 403
     else:
         # Delete one “like”. Return 204 on success.
@@ -313,7 +303,6 @@ def delete_like(likeid):
             (likeid, username)
         )
         connection.commit()
-        # print("deleted ",likeid)
         return flask.jsonify({}), 204
 
 
@@ -338,17 +327,30 @@ def create_comment():
     #HINT: sqlite3 provides a special function to retrieve
     #  the ID of the most recently inserted item: SELECT last_insert_rowid().
     connection = insta485.model.get_db()
-    cur = connection.execute(
-        #如果一个表中有 INTEGER PRIMARY KEY 列，则该列变成 ROWID 的别名。
-        #the database is comments, so the primary key is comment id
-        "SELECT last_insert_rowid()"
-    )
-    print("THE CUR IS")
-    new_comment_id = cur.fetchall()[0]['last_insert_rowid()']
-    print(new_comment_id)
+    
+    # print("The new comment id we fetch for the first time is ",new_comment_id)
+    # if new_comment_id == 0:
+    #     #it is probabaly that it is the first time to run, and it returns the first id
+    #     cur1 = connection.execute(
+    #         "SELECT MAX(commentid) FROM comments"
+    #     )
+    #     result = cur1.fetchall()[0]['MAX(commentid)']
+    #     # print("=======================")
+    #     # print("The result is ", result)
+    #     # print("=======================")
+    #     new_comment_id = result
+    
+        
+
+    # print("The new comment id is",new_comment_id)
 
     # get text from comment input box
+    # print("Here comes the problem")
+    content_type = flask.request.headers.get('Content-Type')
+    # print("the content type is",content_type)
+    # print(flask.request.get_json())
     text = flask.request.get_json()['text']
+    # print("end")
     # if the comment is not inserted ????? how to know whether it is inserted or not 
     # then return 201
 
@@ -366,7 +368,26 @@ def create_comment():
         "(?,?,?)",
         (username, postid, text)
     )
-    commentid = new_comment_id + 1
+
+    cur = connection.execute(
+        #如果一个表中有 INTEGER PRIMARY KEY 列，则该列变成 ROWID 的别名。
+        #the database is comments, so the primary key is comment id
+        "SELECT last_insert_rowid()"
+    )
+    new_comment_id = cur.fetchall()[0]['last_insert_rowid()']
+
+
+    # after the insertion:
+    # print("-------------------------------")
+    # print("000000000000000000000000000")
+    # cur = connection.execute(
+    #     "SELECT * FROM comments "
+    # )
+    # print(cur.fetchall())
+    # print("000000000000000000000000000")
+    # print("-------------------------------")
+
+    commentid = new_comment_id
     context['commentid'] = commentid
     context['lognameOwnsThis'] = True
     context['owner'] = username
@@ -391,7 +412,6 @@ def delete_comment(commentid):
     """delete a comment"""
     if 'username' not in flask.session and not auth:
         flask.abort(403)
-    print("it is run")
     username = flask.session.get('username')
     if not username:
         username = flask.request.authorization['username']
@@ -399,6 +419,9 @@ def delete_comment(commentid):
         if not username or not password:
             return flask.jsonify({}), 400
     # print(0)
+    # print("====================================")
+    # print("The comment id is ",commentid)
+    # print("====================================")
     connection = insta485.model.get_db()
     cur = connection.execute(
         "SELECT owner FROM comments "
@@ -409,16 +432,13 @@ def delete_comment(commentid):
     comment_id_exist = cur.fetchall()
     if(len(comment_id_exist) == 0):
         # If the commentid does not exist, return 404.
-        print(2)
         return flask.jsonify({}), 404
     else:
         # If the user doesn’t own the comment, return 403.
         owner = comment_id_exist[0]["owner"]
-        print(3)
         if owner != username:
             return flask.jsonify({}), 403
         else:
-            print(4)
             # Delete a comment. Include the ID of the comment in the URL.
             # Return 204 on success.
             connection.execute(
@@ -427,4 +447,11 @@ def delete_comment(commentid):
                 (commentid,)
             )
             connection.commit()
+            # print("-------------------------------")
+            # print("The current searched result is here")
+            # cur4 = connection.execute(
+            #     "SELECT * FROM comments "
+            # )
+            # print(cur4.fetchall())
+            # print("-------------------------------")
             return flask.jsonify({}), 204
