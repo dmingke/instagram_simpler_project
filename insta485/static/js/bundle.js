@@ -21,11 +21,12 @@ function Comment(_ref) {
     changeComment = _ref.changeComment;
   var comment_button;
   function deleteComment() {
-    changeComment(comment.commenturl);
+    console.log("I am deleting !!!");
+    changeComment(comment.url);
   }
   if (comment.lognameOwnsThis) {
     comment_button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      onclick: deleteComment
+      onClick: deleteComment
     }, "delete");
   }
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -56,7 +57,8 @@ function Comments(_ref) {
   var comments = _ref.comments,
     changeComment = _ref.changeComment;
   return comments.map(function (comment) {
-    console.log(comment);
+    console.log("new added comments call this ");
+    console.log(comment.commentid);
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_comment__WEBPACK_IMPORTED_MODULE_1__["default"], {
       key: comment.id,
       comment: comment,
@@ -185,6 +187,10 @@ function Post(_ref2) {
     _useState28 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState27, 2),
     numLikes = _useState28[0],
     setNumLikes = _useState28[1];
+  var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(""),
+    _useState30 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState29, 2),
+    new_added_comment = _useState30[0],
+    setNewAddedComment = _useState30[1];
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(function () {
     var ignoreStaleRequest = false;
     fetch(props, {
@@ -216,14 +222,7 @@ function Post(_ref2) {
       ignoreStaleRequest = true;
     };
   }, [props]);
-  // let likes = 
-  // const link = "/api/v1/likes/" + String(postid)
   var time = moment__WEBPACK_IMPORTED_MODULE_3___default()(created).fromNow();
-  // console.log(link)
-
-  // data=json.dumps({"text": "new comment"}),
-  //   headers={"Authorization": f"Basic {credentials}"},
-  //   content_type="application/json")
 
   // like button section ^_^ 1
   function HandleLiked() {
@@ -254,20 +253,8 @@ function Post(_ref2) {
           return newlikenum;
         });
       });
-
-      // .then((data) => {
-      // setlikeid(data.likeid)
-      // })
     } else {
       var link = likeURL;
-      // if(likid !== -1){
-      // link = "/api/v1/likes/" + likid
-      // }
-      // const requestOptions = {
-      // method: 'DELETE',
-      // headers: { 'Content-Type': 'application/json' },
-      // body: JSON.stringify({})
-      // };
       fetch(link, {
         credentials: 'same-origin',
         method: 'DELETE'
@@ -316,21 +303,6 @@ function Post(_ref2) {
     }
   }
 
-  // POST /api/v1/comments/?postid=<postid></postid>
-
-  function changeComment(commenturl) {
-    // const requestOptions = {
-    //   method: 'DELETE',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   // body: JSON.stringify({ text: newtext })
-    // };
-    console.log("It is called");
-    fetch(commenturl, {
-      method: 'DELETE'
-    }).then(function () {
-      console.log("delete successfully");
-    });
-  }
   // started working on double click ^_^ 2
   function handleDoubleClick() {
     // console.log("double click successfully")
@@ -367,10 +339,55 @@ function Post(_ref2) {
         });
       });
     }
-    // let likechange = !liked
-    // setLiked(likechange)
   }
   // end double click ^_^ 2
+
+  function changeComment(commenturl) {
+    fetch(commenturl, {
+      method: 'DELETE'
+    }).then(function () {
+      fetch(props, {
+        credentials: 'same-origin'
+      }).then(function (response) {
+        if (!response.ok) throw Error(response.statusText);
+        return response.json();
+      }).then(function (data) {
+        setComments(data.comments);
+        setCommentsUrl(data.comments_url);
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    });
+  }
+  function handleChange(event) {
+    event.preventDefault();
+    var newtext = event.target.value;
+    setNewAddedComment(newtext);
+  }
+  function handleKeyDown(event) {
+    var requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text: new_added_comment
+      })
+    };
+    if (event.key === 'Enter') {
+      fetch(comments_url, requestOptions, {
+        credentials: 'same-origin'
+      }).then(function (response) {
+        if (!response.ok) throw Error(response.statusText);
+        return response.json();
+      }).then(function (data) {
+        setComments(function (prevComments) {
+          return [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(prevComments), [data]);
+        });
+      });
+      setNewAddedComment("");
+    }
+  }
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("a", {
     href: ownerShowUrl
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("img", {
@@ -395,7 +412,9 @@ function Post(_ref2) {
     changeComment: changeComment
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("input", {
     onChange: handleChange,
-    type: "text"
+    onKeyDown: handleKeyDown,
+    type: "text",
+    value: new_added_comment
   }));
 }
 Posts.propTypes = {

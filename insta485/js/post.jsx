@@ -52,6 +52,7 @@ function Post({props}){
       const [postid,setPostid] = useState(0);
       const [comments_url,setCommentsUrl] = useState("")
       const [numLikes,setNumLikes] = useState(0)
+      const [new_added_comment,setNewAddedComment] = useState("")
       
 
       useEffect(()=> {

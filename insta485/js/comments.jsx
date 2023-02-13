@@ -13,4 +13,3 @@ export default function Comments({comments, changeComment}){
         })
     )   
 }
-
