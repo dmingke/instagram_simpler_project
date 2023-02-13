@@ -372,6 +372,7 @@ def create_comment():
     context['owner'] = username
     context['text'] = text
     context['url'] = "/api/v1/comments/{}/".format(commentid)
+    context['ownerShowUrl'] = "/users/{}/".format(username)
     # input = 3
     # cur = connection.execute(
     #     # "INSERT INTO comments(owner,postid,text) VALUES"
