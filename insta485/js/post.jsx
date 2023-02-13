@@ -64,7 +64,7 @@ export default function Posts({ url }) {
       loader={<h4>Loading...</h4>}
       >
       <div>
-        {newResult.map((result)=><Post key={result.id} props = {result.url}/>)}
+        {newResult.map((result)=><Post key={result.postid} props = {result.url}/>)}
       </div>
       </InfiniteScroll>
     );
@@ -76,14 +76,14 @@ function Post({props}){
       const [ownerImgUrl, setOwnerImg] = useState("");
       const [comments,setComments] = useState([]);
       const [created,setCreated] = useState("");
-      const [likes,setLikes] = useState({});//!!!!
+      const [likes,setLikes] = useState({});
       const [ownerShowUrl, setOwnerUrl] = useState('');
       const [postShowUrl, setPostUrl] = useState('');
-      const [liked, setLiked] = useState(false);//!!!
-      const [likeURL, setLikeUrl] = useState('');//!!!!!!!
+      const [liked, setLiked] = useState(false);
+      const [likeURL, setLikeUrl] = useState('');
       const [postid,setPostid] = useState(0);
       const [comments_url,setCommentsUrl] = useState("");
-      const [numLikes,setNumLikes] = useState(0);//!!!!!
+      const [numLikes,setNumLikes] = useState(0);
       const [new_added_comment,setNewAddedComment] = useState("");
       
 
