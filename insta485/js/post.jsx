@@ -38,7 +38,7 @@ export default function Posts({ url }) {
   const fetchData = async() => {
       if (next === "") {
         setHasMore(false)
-        return
+        return;
       }
       fetch(next, { credentials: 'same-origin' })
       .then((response)=>{
