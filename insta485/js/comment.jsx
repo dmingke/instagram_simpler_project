@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 export default function Comment({comment,changeComment}){
@@ -8,7 +8,7 @@ export default function Comment({comment,changeComment}){
     changeComment(comment.url)
   }
   if (comment.lognameOwnsThis){
-    comment_button = <button onClick={deleteComment}>delete</button>
+    comment_button = <button type="submit" onClick={deleteComment}>delete</button>
   }
   return(
     <div>
@@ -17,3 +17,8 @@ export default function Comment({comment,changeComment}){
     </div>
   )
 }
+
+
+Comment.propTypes = {
+    comment: PropTypes.string.isRequired
+  };
