@@ -1,6 +1,6 @@
 import React, { useState, useEffect,useRef } from "react";
 import PropTypes from "prop-types";
-// import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroll-component";
 import moment from "moment";
 import Comments from "./comments"
 
@@ -9,8 +9,10 @@ import Comments from "./comments"
 // url is a prop for the Post component.
 export default function Posts({ url }) {
   /* Display image and post owner of a single post */
-    // const [next, setNext] = useState('');
+    const [next, setNext] = useState("");
     const [results, setResult] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+    const [newResult, setNew] = useState([])
     useEffect(() => {
       // Declare a boolean flag that we can use to cancel the API request.
       let ignoreStaleRequest = false;
@@ -21,8 +23,9 @@ export default function Posts({ url }) {
     })
     .then((data) => {
       if (!ignoreStaleRequest) {
-        // setNext(data.next)
+        setNext(data.next)
         setResult(data.results)
+        setNew(data.results)
         }
       })
     .catch(error => console.log(error));
@@ -30,10 +33,40 @@ export default function Posts({ url }) {
       ignoreStaleRequest = true;
     };
     }, [url]);
+    
+   
+  const fetchData = async() => {
+      if (next === "") {
+        setHasMore(false)
+        return
+      }
+      fetch(next, { credentials: 'same-origin' })
+      .then((response)=>{
+        if (!response.ok) throw Error(response.statusText);
+      return response.json(); 
+      })
+      .then((data) => {
+
+        setNext(data.next)
+        setNew(results.concat(data.results))
+
+      }
+    )
+    .catch(error => console.log(error));
+
+  }
+  
     return(
+      <InfiniteScroll
+      dataLength={newResult.length}
+      next={fetchData}
+      hasMore={hasMore}
+      loader={<h4>Loading...</h4>}
+      >
       <div>
-        {results.map((result)=><Post props = {result.url}/>)}
+        {newResult.map((result)=><Post key={result.id} props = {result.url}/>)}
       </div>
+      </InfiniteScroll
     );
 }
 
