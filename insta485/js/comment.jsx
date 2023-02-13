@@ -4,10 +4,11 @@ import PropTypes from "prop-types";
 export default function Comment({comment,changeComment}){
   let comment_button;
   function deleteComment(){
-    changeComment(comment.commenturl)
+    console.log("I am deleting !!!")
+    changeComment(comment.url)
   }
   if (comment.lognameOwnsThis){
-    comment_button = <button onclick={deleteComment}>delete</button>
+    comment_button = <button onClick={deleteComment}>delete</button>
   }
   return(
     <div>
