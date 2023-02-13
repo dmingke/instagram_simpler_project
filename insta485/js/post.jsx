@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import moment from "moment";
@@ -76,16 +76,15 @@ function Post({props}){
       const [ownerImgUrl, setOwnerImg] = useState("");
       const [comments,setComments] = useState([]);
       const [created,setCreated] = useState("");
-      const [likes,setLikes] = useState({});
+      const [likes,setLikes] = useState({});//!!!!
       const [ownerShowUrl, setOwnerUrl] = useState('');
       const [postShowUrl, setPostUrl] = useState('');
-      const [liked, setLiked] = useState(false);
-      const [likeURL, setLikeUrl] = useState('');
-
+      const [liked, setLiked] = useState(false);//!!!
+      const [likeURL, setLikeUrl] = useState('');//!!!!!!!
       const [postid,setPostid] = useState(0);
-      const [comments_url,setCommentsUrl] = useState("")
-      const [numLikes,setNumLikes] = useState(0)
-      const [new_added_comment,setNewAddedComment] = useState("")
+      const [comments_url,setCommentsUrl] = useState("");
+      const [numLikes,setNumLikes] = useState(0);//!!!!!
+      const [new_added_comment,setNewAddedComment] = useState("");
       
 
       useEffect(()=> {
@@ -124,22 +123,22 @@ function Post({props}){
       // like button section ^_^ 1
       function HandleLiked(){
           // const [likid, setlikeid] = useState(-1);
-          if (!liked){
+          if (!liked) {
             const requestOptions = {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({})
             };
-            const linkPostLike = "/api/v1/likes/?postid=" + String(postid)
+            const linkPostLike = "/api/v1/likes/?postid=".concat(String(postid))
             fetch(linkPostLike, requestOptions,{ credentials: 'same-origin' })
             .then((response) => {
                 if (!response.ok) throw Error(response.statusText);
                 return response.json();
             })
             .then((data)=>{
-              let tempurl = String(data.likeid)
-              setLikeUrl(prevnum =>{
-                const newlikenum = "/api/v1/likes/" + tempurl + "/";
+              const tempurl = String(data.likeid)
+              setLikeUrl(prevnum => {
+                const newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
                 return newlikenum
               })
           
@@ -164,7 +163,7 @@ function Post({props}){
             
             })
           }
-          let likechange = !liked
+          const likechange = !liked
           setLiked(likechange)
       }
 
@@ -212,16 +211,16 @@ function Post({props}){
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({})
         };
-        const linkPostLike = "/api/v1/likes/?postid=" + String(postid)
+        const linkPostLike = "/api/v1/likes/?postid=".concat(String(postid))
         fetch(linkPostLike, requestOptions,{ credentials: 'same-origin' })
         .then((response) => {
             if (!response.ok) throw Error(response.statusText);
             return response.json();
         })
         .then((data)=>{
-        let tempurl = String(data.likeid)
+        const tempurl = String(data.likeid)
         setLikeUrl(prevnum =>{
-            const newlikenum = "/api/v1/likes/" + tempurl + "/";
+            const newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
             return newlikenum
         })
     
@@ -245,25 +244,25 @@ function Post({props}){
     // end double click ^_^ 2
     
 
-        function changeComment(commenturl){
+  const changeComment= (commenturl)=>{
 
-            fetch(commenturl, { method: 'DELETE' })
-            .then(() => 
-            {
-                fetch(props, { credentials: 'same-origin' })
-                .then((response) => {
-                if (!response.ok) throw Error(response.statusText);
-                return response.json();
-                })
-                .then((data) => {
-                    setComments(data.comments)
-                    setCommentsUrl(data.comments_url)
-                })
-                .catch(error => console.log(error));
+      fetch(commenturl, { method: 'DELETE' })
+      .then(() => 
+      {
+          fetch(props, { credentials: 'same-origin' })
+          .then((response) => {
+          if (!response.ok) throw Error(response.statusText);
+          return response.json();
+          })
+          .then((data) => {
+              setComments(data.comments)
+              setCommentsUrl(data.comments_url)
+          })
+          .catch(error => console.log(error));
 
-            });
+      });
 
-        }
+  }
 
 
         function handleChange(event) {
@@ -301,9 +300,9 @@ function Post({props}){
             <a href={postShowUrl}>{time}</a>
             <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396px" height="350px"/></div>
             {numLikes} <p>likes</p>
-            <button onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
-            <Comments comments={comments} changeComment={changeComment}></Comments>
-            <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={new_added_comment}></input>
+            <button type="button" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
+            <Comments comments={comments} changeComment={changeComment}/>
+            <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={new_added_comment}/>
             </div>
         );
 }
