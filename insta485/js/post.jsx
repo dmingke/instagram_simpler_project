@@ -85,14 +85,7 @@ function Post({props}){
             ignoreStaleRequest = true;
         };
       }, [props]);
-      // let likes = 
-      // const link = "/api/v1/likes/" + String(postid)
       const time = moment(created).fromNow();
-      // console.log(link)
-
-      // data=json.dumps({"text": "new comment"}),
-      //   headers={"Authorization": f"Basic {credentials}"},
-      //   content_type="application/json")
 
       // like button section ^_^ 1
       function HandleLiked(){
@@ -125,21 +118,9 @@ function Post({props}){
               })
           
             })
-
-            // .then((data) => {
-                // setlikeid(data.likeid)
-              // })
           }
           else{
             const link = likeURL
-            // if(likid !== -1){
-              // link = "/api/v1/likes/" + likid
-            // }
-            // const requestOptions = {
-              // method: 'DELETE',
-              // headers: { 'Content-Type': 'application/json' },
-              // body: JSON.stringify({})
-            // };
             fetch(link, { credentials: 'same-origin' , method: 'DELETE'})
             .then(()=>{
                 setNumLikes(prevnum =>{
@@ -186,85 +167,111 @@ function Post({props}){
 
       }
 
-      // POST /api/v1/comments/?postid=<postid></postid>
+     
+    // started working on double click ^_^ 2
+    function handleDoubleClick(){
+    // console.log("double click successfully")
+    if (!liked){
+        console.log("double click successfully")
+        const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+        };
+        const linkPostLike = "/api/v1/likes/?postid=" + String(postid)
+        fetch(linkPostLike, requestOptions,{ credentials: 'same-origin' })
+        .then((response) => {
+            if (!response.ok) throw Error(response.statusText);
+            return response.json();
+        })
+        .then((data)=>{
+        let tempurl = String(data.likeid)
+        setLikeUrl(prevnum =>{
+            const newlikenum = "/api/v1/likes/" + tempurl + "/";
+            return newlikenum
+        })
+    
+        })
+        .then(()=>{
+        
+        setNumLikes(prevnum =>{
+            const newlikenum = prevnum + 1;
+            return newlikenum
+        })
+        })
+        .then(()=>{
+        
+        setLiked(prevnum =>{
+            const newlikenum = true;
+            return newlikenum
+        })
+        })
+    }
+    }
+    // end double click ^_^ 2
+    
 
-      function changeComment(commenturl){
+        function changeComment(commenturl){
 
-        // const requestOptions = {
-        //   method: 'DELETE',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   // body: JSON.stringify({ text: newtext })
-        // };
-        console.log("It is called")
-        fetch(commenturl, { method: 'DELETE' })
-        .then(() => 
-        {
-          console.log("delete successfully")
-        });
+            fetch(commenturl, { method: 'DELETE' })
+            .then(() => 
+            {
+                fetch(props, { credentials: 'same-origin' })
+                .then((response) => {
+                if (!response.ok) throw Error(response.statusText);
+                return response.json();
+                })
+                .then((data) => {
+                    setComments(data.comments)
+                    setCommentsUrl(data.comments_url)
+                })
+                .catch(error => console.log(error));
 
-      }
-      // started working on double click ^_^ 2
-      function handleDoubleClick(){
-        // console.log("double click successfully")
-        if (!liked){
-          console.log("double click successfully")
-          const requestOptions = {
+            });
+
+        }
+
+
+        function handleChange(event) {
+            event.preventDefault()
+            const newtext = event.target.value;
+            setNewAddedComment(newtext);
+        }
+
+        function handleKeyDown(event){
+            const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({})
-          };
-          const linkPostLike = "/api/v1/likes/?postid=" + String(postid)
-          fetch(linkPostLike, requestOptions,{ credentials: 'same-origin' })
-          .then((response) => {
-              if (!response.ok) throw Error(response.statusText);
-              return response.json();
-          })
-          .then((data)=>{
-            let tempurl = String(data.likeid)
-            setLikeUrl(prevnum =>{
-              const newlikenum = "/api/v1/likes/" + tempurl + "/";
-              return newlikenum
-            })
-        
-          })
-          .then(()=>{
+            body: JSON.stringify({ text: new_added_comment })
+            };
+            if (event.key === 'Enter') {
+                fetch(comments_url, requestOptions,{ credentials: 'same-origin' })
+                .then((response) => {
+                    if (!response.ok) throw Error(response.statusText);
+                    return response.json();
+                })
+                .then((data)=>{
+                    setComments(prevComments =>{
+                        return [...prevComments,data]
+                    })
+                })
+                setNewAddedComment("")      
+            }
             
-            setNumLikes(prevnum =>{
-              const newlikenum = prevnum + 1;
-              return newlikenum
-            })
-          })
-          .then(()=>{
-            
-            setLiked(prevnum =>{
-              const newlikenum = true;
-              return newlikenum
-            })
-          })
         }
-        // let likechange = !liked
-        // setLiked(likechange)
-      }
-      // end double click ^_^ 2
-      return(
-        <div>
-          <a href={ownerShowUrl}><img src={ownerImgUrl} alt="men 1" width="50px" height="46px"/></a>
-          <a href={ownerShowUrl}>{owner}</a>
-          <a href={postShowUrl}>{time}</a>
-          <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396px" height="350px"/></div>
-          {numLikes} <p>likes</p>
-          <button onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
-          {/* {comments.map((comment)=><{result.url}/>)} */}
-          
-          {/* <b><a href={comments.owner}>{comments.owner}</a></b>{comments.text} */}
-          <Comments comments={comments} changeComment={changeComment}></Comments>
-          {/* 是不是得判断你是不是login user？ */}
-          {/* 让不让用ref */}
-          {/* e.preventDefault(); 加在哪里？？？？？*/}
-          <input onChange={handleChange} type="text"></input>
-        </div>
-    );
-      
+
+        return(
+            <div>
+            <a href={ownerShowUrl}><img src={ownerImgUrl} alt="men 1" width="50px" height="46px"/></a>
+            <a href={ownerShowUrl}>{owner}</a>
+            <a href={postShowUrl}>{time}</a>
+            <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396px" height="350px"/></div>
+            {numLikes} <p>likes</p>
+            <button onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
+            <Comments comments={comments} changeComment={changeComment}></Comments>
+            <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={new_added_comment}></input>
+            </div>
+        );
 }
 
 
