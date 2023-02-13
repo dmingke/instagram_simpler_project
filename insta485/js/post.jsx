@@ -66,7 +66,7 @@ export default function Posts({ url }) {
       <div>
         {newResult.map((result)=><Post key={result.id} props = {result.url}/>)}
       </div>
-      </InfiniteScroll
+      </InfiniteScroll>
     );
 }
 
