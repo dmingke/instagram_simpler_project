@@ -16,8 +16,3 @@ export default function Comment({comment,changeComment}){
     </div>
   )
 }
-
-
-Comment.propTypes = {
-    comment: PropTypes.string.isRequired
-  };
