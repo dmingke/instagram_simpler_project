@@ -70,7 +70,7 @@ export default function Posts({ url }) {
     );
 }
 
-function Post({props}){
+function Post({props}) {
       const [imgUrl, setImgUrl] = useState("");
       const [owner, setOwner] = useState("");
       const [ownerImgUrl, setOwnerImg] = useState("");
@@ -82,20 +82,19 @@ function Post({props}){
       const [liked, setLiked] = useState(false);
       const [likeURL, setLikeUrl] = useState('');
       const [postid,setPostid] = useState(0);
-      const [comments_url,setCommentsUrl] = useState("");
+      const [comUrl,setCommentsUrl] = useState("");
       const [numLikes,setNumLikes] = useState(0);
-      const [new_added_comment,setNewAddedComment] = useState("");
+      const [newCom,setNewAddedComment] = useState("");
       
 
-      useEffect(()=> {
-        let ignoreStaleRequest = false;
+        // let ignoreStaleRequest = false;
       fetch(props, { credentials: 'same-origin' })
       .then((response) => {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
       })
       .then((data) => {
-        if (!ignoreStaleRequest) {
+
           // setNext(data.next)
           setComments(data.comments)
           setCreated(data.created)
@@ -105,19 +104,16 @@ function Post({props}){
           setImgUrl(data.imgUrl)
           setOwnerUrl(data.ownerShowUrl)
           setPostUrl(data.postShowUrl)
-          setCommentsUrl(data.comments_url)
+          setCommentsUrl(data.comUrl)
           setLiked(data.likes.lognameLikesThis)
           setPostid(data.postid)
           setLikeUrl(data.likes.url)
           setNumLikes(data.likes.numLikes)
-          }
-        })
+          })
       .catch(error => console.log(error));
     
-      return () => {
-            ignoreStaleRequest = true;
-        };
-      }, [props]);
+
+
       const time = moment(created).fromNow();
 
       // like button section ^_^ 1
@@ -137,10 +133,11 @@ function Post({props}){
             })
             .then((data)=>{
               const tempurl = String(data.likeid)
-              setLikeUrl(() => {
+              setLikeUrl(prevnum => {
                 const newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
                 return newlikenum
               })
+          
             })
             .then(()=>{
               
@@ -153,12 +150,7 @@ function Post({props}){
           }
           else{
             const link = likeURL
-            const requestOptions = {
-              method: 'DELETE',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({})
-            };
-            fetch(link, requestOptions, { credentials: 'same-origin' })
+            fetch(link, { credentials: 'same-origin' , method: 'DELETE'})
             .then(()=>{
                 setNumLikes(prevnum =>{
                   const newlikenu = prevnum - 1;
@@ -186,7 +178,7 @@ function Post({props}){
         
         var key = event.key;
         if (key == "Enter") {
-          fetch(comments_url, requestOptions,{ credentials: 'same-origin' })
+          fetch(comUrl, requestOptions,{ credentials: 'same-origin' })
           .then((response) => {
             if (!response.ok) throw Error(response.statusText);
             return response.json();
@@ -198,7 +190,7 @@ function Post({props}){
           })
         }else{
           console.log(key)
-          console.log("hihihihihihihi")
+    
         }
         
 
@@ -223,7 +215,7 @@ function Post({props}){
         })
         .then((data)=>{
         const tempurl = String(data.likeid)
-        setLikeUrl(() =>{
+        setLikeUrl(prevnum =>{
             const newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
             return newlikenum
         })
@@ -238,7 +230,7 @@ function Post({props}){
         })
         .then(()=>{
         
-        setLiked(()=>{
+        setLiked(prevnum =>{
             const newlikenum = true;
             return newlikenum
         })
@@ -248,7 +240,7 @@ function Post({props}){
     // end double click ^_^ 2
     
 
-  const changeComment= (commenturl)=>{
+  const changeComment = (commenturl)=>{
 
       fetch(commenturl, { method: 'DELETE' })
       .then(() => 
@@ -260,7 +252,7 @@ function Post({props}){
           })
           .then((data) => {
               setComments(data.comments)
-              setCommentsUrl(data.comments_url)
+              setCommentsUrl(data.comUrl)
           })
           .catch(error => console.log(error));
 
@@ -279,10 +271,10 @@ function Post({props}){
             const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: new_added_comment })
+            body: JSON.stringify({ text: newCom })
             };
             if (event.key === 'Enter') {
-                fetch(comments_url, requestOptions,{ credentials: 'same-origin' })
+                fetch(comUrl, requestOptions,{ credentials: 'same-origin' })
                 .then((response) => {
                     if (!response.ok) throw Error(response.statusText);
                     return response.json();
@@ -304,9 +296,9 @@ function Post({props}){
             <a href={postShowUrl}>{time}</a>
             <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396px" height="350px"/></div>
             {numLikes} <p>likes</p>
-            <button type="button" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
-            <Comments comments={comments} changeComment={changeComment}/>
-            <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={new_added_comment}/>
+            <button type="submit" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
+            <Comments key={comUrl} comments={comments} changeComment={changeComment}/>
+            <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={newCom}/>
             </div>
         );
 }
