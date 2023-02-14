@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import moment from "moment";
@@ -76,7 +76,6 @@ function Post({props}) {
       const [ownerImgUrl, setOwnerImg] = useState("");
       const [comments,setComments] = useState([]);
       const [created,setCreated] = useState("");
-      const [likes,setLikes] = useState({});
       const [ownerShowUrl, setOwnerUrl] = useState('');
       const [postShowUrl, setPostUrl] = useState('');
       const [liked, setLiked] = useState(false);
@@ -98,7 +97,6 @@ function Post({props}) {
           // setNext(data.next)
           setComments(data.comments)
           setCreated(data.created)
-          setLikes(data.likes)
           setOwner(data.owner)
           setOwnerImg(data.ownerImgUrl)
           setImgUrl(data.imgUrl)
@@ -177,16 +175,15 @@ function Post({props}) {
         };
         
         var key = event.key;
-        if (key == "Enter") {
+        if (key === "Enter") {
           fetch(comUrl, requestOptions,{ credentials: 'same-origin' })
           .then((response) => {
             if (!response.ok) throw Error(response.statusText);
             return response.json();
           })
           .then((data)=>{
-              setComments(prevComments =>{
-                return [...prevComments,data]
-              })
+              setComments(prevComments =>[...prevComments,data]
+              )
           })
         }else{
           console.log(key)
@@ -280,9 +277,8 @@ function Post({props}) {
                     return response.json();
                 })
                 .then((data)=>{
-                    setComments(prevComments =>{
-                        return [...prevComments,data]
-                    })
+                    setComments(prevComments =>[...prevComments,data]
+                    )
                 })
                 setNewAddedComment("")      
             }
@@ -295,10 +291,12 @@ function Post({props}) {
             <a href={ownerShowUrl}>{owner}</a>
             <a href={postShowUrl}>{time}</a>
             <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396px" height="350px"/></div>
-            {numLikes} <p>likes</p>
-            <button type="submit" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
+            <p>{numLikes} {numLikes<=1 ? "like" : "likes"}</p>
+            <button type="submit" className="like-unlike-button" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
             <Comments key={comUrl} comments={comments} changeComment={changeComment}/>
+            <form className="comment-form">
             <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={newCom}/>
+            </form>
             </div>
         );
 }
