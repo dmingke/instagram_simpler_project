@@ -250,8 +250,8 @@ def create_like():
             )
         find_new_like = connection.execute(
                 "SELECT * FROM likes "
-                "WHERE postid == ?",
-                (postid, )
+                "WHERE postid == ? and owner == ?",
+                (postid, username)
             )
         like_id = find_new_like.fetchone()['likeid']
         url = "/api/v1/likes/{}/".format(like_id)
