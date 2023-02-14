@@ -141,8 +141,6 @@ function Post({props}){
                 const newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
                 return newlikenum
               })
-              console.log("like")
-              console.log(tempurl)
             })
             .then(()=>{
               
@@ -155,8 +153,6 @@ function Post({props}){
           }
           else{
             const link = likeURL
-            console.log("delete")
-            console.log(likeURL)
             fetch(link, { credentials: 'same-origin' , method: 'DELETE'})
             .then(()=>{
                 setNumLikes(prevnum =>{
