@@ -7,11 +7,11 @@ export default function Comment({ comment, changeComment }) {
         changeComment(comment.url)
     }
     if (comment.lognameOwnsThis) {
-        cbutton = <button type="submit" onClick={deleteComment}>delete</button>
+        cbutton = <button className="delete-comment-button" type="submit" onClick={deleteComment}>delete</button>
     }
     return (
         <div>
-            <strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}
+            <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
             {cbutton}
         </div>
     )
