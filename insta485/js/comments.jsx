@@ -5,10 +5,8 @@ import Comment from "./comment";
 export default function Comments({comments, changeComment}){
     return(
         
-        comments.map(comment =>{
-            console.log("new added comments call this ")
-            console.log(comment.commentid)
-            return <Comment key={comment.id} comment={comment} changeComment={changeComment}/>
-        })
+        comments.map(comment =>
+             <Comment key={comment.commentid} comment={comment} changeComment={changeComment}/>
+        )
     )   
 }
