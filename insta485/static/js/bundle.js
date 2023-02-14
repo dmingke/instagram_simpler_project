@@ -299,12 +299,10 @@ function Post(_ref3) {
         return response.json();
       }).then(function (data) {
         var tempurl = String(data.likeid);
-        setLikeUrl(function (prevnum) {
+        setLikeUrl(function () {
           var newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
           return newlikenum;
         });
-        console.log("like");
-        console.log(tempurl);
       }).then(function () {
         setNumLikes(function (prevnum) {
           var newlikenum = prevnum + 1;
@@ -313,11 +311,15 @@ function Post(_ref3) {
       });
     } else {
       var link = likeURL;
-      console.log("delete");
-      console.log(likeURL);
-      fetch(link, {
-        credentials: 'same-origin',
-        method: 'DELETE'
+      var _requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      };
+      fetch(link, _requestOptions, {
+        credentials: 'same-origin'
       }).then(function () {
         setNumLikes(function (prevnum) {
           var newlikenu = prevnum - 1;
@@ -383,7 +385,7 @@ function Post(_ref3) {
         return response.json();
       }).then(function (data) {
         var tempurl = String(data.likeid);
-        setLikeUrl(function (prevnum) {
+        setLikeUrl(function () {
           var newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
           return newlikenum;
         });
@@ -393,7 +395,7 @@ function Post(_ref3) {
           return newlikenum;
         });
       }).then(function () {
-        setLiked(function (prevnum) {
+        setLiked(function () {
           var newlikenum = true;
           return newlikenum;
         });

@@ -137,7 +137,7 @@ function Post({props}){
             })
             .then((data)=>{
               const tempurl = String(data.likeid)
-              setLikeUrl(prevnum => {
+              setLikeUrl(() => {
                 const newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
                 return newlikenum
               })
@@ -153,7 +153,12 @@ function Post({props}){
           }
           else{
             const link = likeURL
-            fetch(link, { credentials: 'same-origin' , method: 'DELETE'})
+            const requestOptions = {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({})
+            };
+            fetch(link, requestOptions, { credentials: 'same-origin' })
             .then(()=>{
                 setNumLikes(prevnum =>{
                   const newlikenu = prevnum - 1;
@@ -218,7 +223,7 @@ function Post({props}){
         })
         .then((data)=>{
         const tempurl = String(data.likeid)
-        setLikeUrl(prevnum =>{
+        setLikeUrl(() =>{
             const newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
             return newlikenum
         })
@@ -233,7 +238,7 @@ function Post({props}){
         })
         .then(()=>{
         
-        setLiked(prevnum =>{
+        setLiked(()=>{
             const newlikenum = true;
             return newlikenum
         })
