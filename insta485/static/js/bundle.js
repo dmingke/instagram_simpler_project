@@ -14,25 +14,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
 
 
 function Comment(_ref) {
   var comment = _ref.comment,
     changeComment = _ref.changeComment;
-  var comment_button;
+  var cbutton;
   function deleteComment() {
     changeComment(comment.url);
   }
   if (comment.lognameOwnsThis) {
-    comment_button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    cbutton = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "delete-comment-button",
       type: "submit",
       onClick: deleteComment
     }, "delete");
   }
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "comment-text"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
     href: comment.ownerShowUrl
-  }, comment.owner)), comment.text, comment_button);
+  }, comment.owner)), comment.text), cbutton);
 }
+Comment.propTypes = {
+  comment: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().object.isRequired),
+  changeComment: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().func)
+};
 
 /***/ }),
 
@@ -56,10 +65,8 @@ function Comments(_ref) {
   var comments = _ref.comments,
     changeComment = _ref.changeComment;
   return comments.map(function (comment) {
-    console.log("new added comments call this ");
-    console.log(comment.commentid);
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_comment__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      key: comment.id,
+      key: comment.commentid,
       comment: comment,
       changeComment: changeComment
     });
@@ -213,7 +220,6 @@ function Post(_ref3) {
     setCreated = _useState18[1];
   var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)({}),
     _useState20 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState19, 2),
-    likes = _useState20[0],
     setLikes = _useState20[1];
   var _useState21 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(''),
     _useState22 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState21, 2),
@@ -237,7 +243,7 @@ function Post(_ref3) {
     setPostid = _useState30[1];
   var _useState31 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(""),
     _useState32 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState31, 2),
-    comments_url = _useState32[0],
+    comUrl = _useState32[0],
     setCommentsUrl = _useState32[1];
   var _useState33 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(0),
     _useState34 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState33, 2),
@@ -245,7 +251,7 @@ function Post(_ref3) {
     setNumLikes = _useState34[1];
   var _useState35 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(""),
     _useState36 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState35, 2),
-    new_added_comment = _useState36[0],
+    newCom = _useState36[0],
     setNewAddedComment = _useState36[1];
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
     var ignoreStaleRequest = false;
@@ -348,8 +354,8 @@ function Post(_ref3) {
       })
     };
     var key = event.key;
-    if (key == "Enter") {
-      fetch(comments_url, requestOptions, {
+    if (key === "Enter") {
+      fetch(comUrl, requestOptions, {
         credentials: 'same-origin'
       }).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
@@ -361,7 +367,7 @@ function Post(_ref3) {
       });
     } else {
       console.log(key);
-      console.log("hihihihihihihi");
+      // console.log("hihihihihihihi")
     }
   }
 
@@ -433,11 +439,11 @@ function Post(_ref3) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        text: new_added_comment
+        text: newCom
       })
     };
     if (event.key === 'Enter') {
-      fetch(comments_url, requestOptions, {
+      fetch(comUrl, requestOptions, {
         credentials: 'same-origin'
       }).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
@@ -467,18 +473,22 @@ function Post(_ref3) {
     alt: "post_image",
     width: "396px",
     height: "350px"
-  })), numLikes, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("p", null, "likes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("button", {
-    type: "button",
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("p", null, numLikes, " ", numLikes === 1 ? "like" : "likes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("button", {
+    type: "submit",
+    className: "like-unlike-button",
     onClick: HandleLiked
   }, liked ? 'unlike' : 'like'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement(_comments__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    key: comUrl,
     comments: comments,
     changeComment: changeComment
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("input", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("form", {
+    className: "comment-form"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("input", {
     onChange: handleChange,
     onKeyDown: handleKeyDown,
     type: "text",
-    value: new_added_comment
-  }));
+    value: newCom
+  })));
 }
 Posts.propTypes = {
   url: (prop_types__WEBPACK_IMPORTED_MODULE_8___default().string.isRequired)

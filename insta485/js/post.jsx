@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import moment from "moment";
@@ -70,12 +70,13 @@ export default function Posts({ url }) {
     );
 }
 
-function Post({props}) {
+function Post({props}){
       const [imgUrl, setImgUrl] = useState("");
       const [owner, setOwner] = useState("");
       const [ownerImgUrl, setOwnerImg] = useState("");
       const [comments,setComments] = useState([]);
       const [created,setCreated] = useState("");
+      const [,setLikes] = useState({});
       const [ownerShowUrl, setOwnerUrl] = useState('');
       const [postShowUrl, setPostUrl] = useState('');
       const [liked, setLiked] = useState(false);
@@ -86,32 +87,37 @@ function Post({props}) {
       const [newCom,setNewAddedComment] = useState("");
       
 
-        // let ignoreStaleRequest = false;
+      useEffect(()=> {
+        let ignoreStaleRequest = false;
       fetch(props, { credentials: 'same-origin' })
       .then((response) => {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
       })
       .then((data) => {
-
+        if (!ignoreStaleRequest) {
           // setNext(data.next)
           setComments(data.comments)
           setCreated(data.created)
+          setLikes(data.likes)
           setOwner(data.owner)
           setOwnerImg(data.ownerImgUrl)
           setImgUrl(data.imgUrl)
           setOwnerUrl(data.ownerShowUrl)
           setPostUrl(data.postShowUrl)
-          setCommentsUrl(data.comUrl)
+          setCommentsUrl(data.comments_url)
           setLiked(data.likes.lognameLikesThis)
           setPostid(data.postid)
           setLikeUrl(data.likes.url)
           setNumLikes(data.likes.numLikes)
-          })
+          }
+        })
       .catch(error => console.log(error));
     
-
-
+      return () => {
+            ignoreStaleRequest = true;
+        };
+      }, [props]);
       const time = moment(created).fromNow();
 
       // like button section ^_^ 1
@@ -131,11 +137,10 @@ function Post({props}) {
             })
             .then((data)=>{
               const tempurl = String(data.likeid)
-              setLikeUrl(prevnum => {
+              setLikeUrl(() => {
                 const newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
                 return newlikenum
               })
-          
             })
             .then(()=>{
               
@@ -148,7 +153,12 @@ function Post({props}) {
           }
           else{
             const link = likeURL
-            fetch(link, { credentials: 'same-origin' , method: 'DELETE'})
+            const requestOptions = {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({})
+            };
+            fetch(link, requestOptions, { credentials: 'same-origin' })
             .then(()=>{
                 setNumLikes(prevnum =>{
                   const newlikenu = prevnum - 1;
@@ -187,7 +197,7 @@ function Post({props}) {
           })
         }else{
           console.log(key)
-    
+          // console.log("hihihihihihihi")
         }
         
 
@@ -212,7 +222,7 @@ function Post({props}) {
         })
         .then((data)=>{
         const tempurl = String(data.likeid)
-        setLikeUrl(prevnum =>{
+        setLikeUrl(() =>{
             const newlikenum = "/api/v1/likes/".concat(tempurl.concat("/"));
             return newlikenum
         })
@@ -227,7 +237,7 @@ function Post({props}) {
         })
         .then(()=>{
         
-        setLiked(prevnum =>{
+        setLiked(()=>{
             const newlikenum = true;
             return newlikenum
         })
@@ -237,7 +247,7 @@ function Post({props}) {
     // end double click ^_^ 2
     
 
-  const changeComment = (commenturl)=>{
+  const changeComment= (commenturl)=>{
 
       fetch(commenturl, { method: 'DELETE' })
       .then(() => 
@@ -249,7 +259,7 @@ function Post({props}) {
           })
           .then((data) => {
               setComments(data.comments)
-              setCommentsUrl(data.comUrl)
+              setCommentsUrl(data.comments_url)
           })
           .catch(error => console.log(error));
 
@@ -286,18 +296,18 @@ function Post({props}) {
         }
 
         return(
-            <div>
-            <a href={ownerShowUrl}><img src={ownerImgUrl} alt="men 1" width="50px" height="46px"/></a>
-            <a href={ownerShowUrl}>{owner}</a>
-            <a href={postShowUrl}>{time}</a>
-            <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396px" height="350px"/></div>
-            <p>{numLikes} {numLikes<=1 ? "like" : "likes"}</p>
-            <button type="submit" className="like-unlike-button" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
-            <Comments key={comUrl} comments={comments} changeComment={changeComment}/>
-            <form className="comment-form">
-            <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={newCom}/>
-            </form>
-            </div>
+          <div>
+          <a href={ownerShowUrl}><img src={ownerImgUrl} alt="men 1" width="50px" height="46px"/></a>
+          <a href={ownerShowUrl}>{owner}</a>
+          <a href={postShowUrl}>{time}</a>
+          <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396px" height="350px"/></div>
+          <p>{numLikes} {numLikes===1 ? "like" : "likes"}</p>
+          <button type="submit" className="like-unlike-button" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
+          <Comments key={comUrl} comments={comments} changeComment={changeComment}/>
+          <form className="comment-form">
+          <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={newCom}/>
+          </form>
+          </div>
         );
 }
 
