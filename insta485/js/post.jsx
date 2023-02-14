@@ -85,6 +85,7 @@ function Post({props}){
       const [comUrl,setCommentsUrl] = useState("");
       const [numLikes,setNumLikes] = useState(0);
       const [newCom,setNewAddedComment] = useState("");
+      const [checkingCompleted,setCheckingCompleted] = useState(false);
       
 
       useEffect(()=> {
@@ -110,6 +111,7 @@ function Post({props}){
           setPostid(data.postid)
           setLikeUrl(data.likes.url)
           setNumLikes(data.likes.numLikes)
+          setCheckingCompleted(true)
           }
         })
       .catch(error => console.log(error));
@@ -293,6 +295,9 @@ function Post({props}){
                 setNewAddedComment("")      
             }
             
+        }
+        if (!checkingCompleted){
+          return <p> please wait... </p>
         }
 
         return(

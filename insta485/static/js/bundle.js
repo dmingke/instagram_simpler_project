@@ -253,6 +253,10 @@ function Post(_ref3) {
     _useState36 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState35, 2),
     newCom = _useState36[0],
     setNewAddedComment = _useState36[1];
+  var _useState37 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(false),
+    _useState38 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState37, 2),
+    checkingCompleted = _useState38[0],
+    setCheckingCompleted = _useState38[1];
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
     var ignoreStaleRequest = false;
     fetch(props, {
@@ -276,6 +280,7 @@ function Post(_ref3) {
         setPostid(data.postid);
         setLikeUrl(data.likes.url);
         setNumLikes(data.likes.numLikes);
+        setCheckingCompleted(true);
       }
     })["catch"](function (error) {
       return console.log(error);
@@ -455,6 +460,9 @@ function Post(_ref3) {
       });
       setNewAddedComment("");
     }
+  }
+  if (!checkingCompleted) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("p", null, " please wait... ");
   }
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("a", {
     href: ownerShowUrl
