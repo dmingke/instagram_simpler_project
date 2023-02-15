@@ -2,10 +2,11 @@
 import flask
 import insta485
 
+
 @insta485.app.route('/api/v1/', methods=["GET"])
 def get_services():
-    # Return a list of services available. The output 
-    # should look exactly like this example. 
+    # Return a list of services available. The output
+    # should look exactly like this example.
     # Does not require user to be authenticated.
     context = {
         "comments": "/api/v1/comments/",
@@ -16,11 +17,12 @@ def get_services():
     print(context)
     return flask.jsonify(**context), 200
 
+
 @insta485.app.route('/api/v1/posts/', methods=["GET"])
 def get_post():
     # Return the 10 newest posts.
-    # each post is made by a user which the logged in user follows 
-    # or the post is made by the logged in user. 
+    # each post is made by a user which the logged in user follows
+    # or the post is made by the logged in user.
     # When postid_lte is not specified, default to the most recent postid
     auth = flask.request.authorization
     if 'username' not in flask.session and not auth:
@@ -39,19 +41,20 @@ def get_post():
         return flask.jsonify({}), 400
     connection = insta485.model.get_db()
     total_post = connection.execute(
-            "SELECT postid FROM posts "
-            "where owner == ? OR "
-            "owner IN (SELECT username2 FROM following "
-            "where username1 == ?)",
-            (logname, logname, )
-        ).fetchall()
+        "SELECT postid FROM posts "
+        "where owner == ? OR "
+        "owner IN (SELECT username2 FROM following "
+        "where username1 == ?)",
+        (logname, logname, )
+    ).fetchall()
     numPost = len(total_post)
     newest = total_post[numPost-1]['postid']
     # if postid_lte is not specified
     if (postid_if_user is None):
         # postid_if_user = flask.request.args.get("page"
         selected_postid = connection.execute(
-            "SELECT postid,  ('/api/v1/posts/' || postid || '/') AS url FROM posts "
+            "SELECT postid,  ('/api/v1/posts/' || postid ||\
+                 '/') AS url FROM posts "
             "where owner == ? OR "
             "owner IN (SELECT username2 FROM following "
             "where username1 == ?) ORDER BY postid DESC "
@@ -61,13 +64,15 @@ def get_post():
         results = list(selected_postid)
         if size*(page+1) <= numPost:
             # ?????????what is the page (the max)
-            next = "/api/v1/posts/?size={}&page={}&postid_lte={}".format(size, page+1,newest)
+            next = "/api/v1/posts/?size={}&page={}&postid_lte={}".format(
+                size, page+1, newest)
         else:
             next = ""
     #  if specified
     else:
         selected = connection.execute(
-            "SELECT postid,  ('/api/v1/posts/' || postid || '/') AS url FROM posts "
+            "SELECT postid,  ('/api/v1/posts/' || postid ||\
+                 '/') AS url FROM posts "
             "where (owner == ? OR "
             "owner IN (SELECT username2 FROM following "
             "where username1 == ?)) "
@@ -80,7 +85,8 @@ def get_post():
                 if int(id['postid']) <= int(postid_if_user)-size*page:
                     results.append(id)
         if size*(page+1) + 1 <= numPost:
-            next = "/api/v1/posts/?size={}&page={}&postid_lte={}".format(size, page+1,newest)
+            next = "/api/v1/posts/?size={}&page={}&postid_lte={}".format(
+                size, page+1, newest)
         else:
             next = ""
     context = {
@@ -93,7 +99,7 @@ def get_post():
 
 @insta485.app.route('/api/v1/posts/<int:postid_url_slug>/', methods=['GET'])
 def get_post1(postid_url_slug):
-    #checking authorization...
+    # checking authorization...
     auth = flask.request.authorization
     if 'username' not in flask.session and not auth:
         flask.abort(403)
@@ -104,7 +110,7 @@ def get_post1(postid_url_slug):
         if not username or not password:
             return flask.jsonify({}), 400
 
-    #get post info from db
+    # get post info from db
     connection = insta485.model.get_db()
     largest = connection.execute(
         "SELECT postid "
@@ -123,7 +129,7 @@ def get_post1(postid_url_slug):
     filename = '/uploads/' + post['filename']
     owner = post['owner']
 
-    #get post owner info from db
+    # get post owner info from db
     cur = connection.execute(
         "SELECT filename FROM users "
         "WHERE username=?",
@@ -132,7 +138,7 @@ def get_post1(postid_url_slug):
     userimage = '/uploads/' + cur.fetchone()['filename']
     ownerurl = "/users/{}/".format(owner)
 
-    #get comment info from db
+    # get comment info from db
     cur = connection.execute(
         "SELECT * FROM comments "
         "WHERE postid=?",
@@ -145,8 +151,8 @@ def get_post1(postid_url_slug):
         singlecomment = {}
         singlecomment['commentid'] = comment['commentid']
         singlecomment['owner'] = comment['owner']
-        #print(flask.session.get('username'))
-        if(comment['owner'] == username):
+        # print(flask.session.get('username'))
+        if (comment['owner'] == username):
             loguser_create_this_comment = True
         singlecomment['lognameOwnsThis'] = loguser_create_this_comment
         ownerurl = "/users/{}/".format(comment['owner'])
@@ -156,7 +162,7 @@ def get_post1(postid_url_slug):
         singlecomment['url'] = comment_url
         comments_list.append(singlecomment)
 
-    #get post being liked condition from db
+    # get post being liked condition from db
     cur = connection.execute(
         "SELECT * FROM likes "
         "WHERE postid=?",
@@ -164,7 +170,7 @@ def get_post1(postid_url_slug):
     )
     like_condition = cur.fetchall()
     likes_dict = {}
-    if(len(like_condition) == 0):
+    if (len(like_condition) == 0):
         numlikes = 0
         login_user_liked = False
         like_url = None
@@ -181,17 +187,18 @@ def get_post1(postid_url_slug):
         if login_user_liked:
             like_url = "/api/v1/likes/{}/".format(like_id)
         else:
-            #If the logged in user does not like the post
-            #then the like url should be null
+            # If the logged in user does not like the post
+            # then the like url should be null
             like_url = null
         likes_dict['url'] = like_url
         likes_dict['lognameLikesThis'] = login_user_liked
         likes_dict['numLikes'] = numlikes
 
-    #assemble information into the context dictionary
+    # assemble information into the context dictionary
     context = {}
     context['comments'] = comments_list
-    context['comments_url'] = "/api/v1/comments/?postid={}".format(postid_url_slug)
+    context['comments_url'] = "/api/v1/comments/?postid={}".format(
+        postid_url_slug)
     context['created'] = post['created']
     context['imgUrl'] = filename
     context['likes'] = likes_dict
@@ -207,7 +214,7 @@ def get_post1(postid_url_slug):
 
 @insta485.app.route('/api/v1/likes/', methods=['POST'])
 def create_like():
-    #checking authorization...
+    # checking authorization...
     auth = flask.request.authorization
     if 'username' not in flask.session and not auth:
         flask.abort(403)
@@ -217,42 +224,42 @@ def create_like():
         password = flask.request.authorization['password']
         if not username or not password:
             return flask.jsonify({}), 400
-    
-    #initializing context dictionary
+
+    # initializing context dictionary
     context = {}
 
-    #getting post id
+    # getting post id
     postid = flask.request.args.get('postid')
 
-    #check if the like is already existing
+    # check if the like is already existing
     connection = insta485.model.get_db()
     cur = connection.execute(
-            "SELECT * FROM likes "
-            "WHERE postid == ?"
-            "AND owner = ?",
-            (postid, username)
-        )
+        "SELECT * FROM likes "
+        "WHERE postid == ?"
+        "AND owner = ?",
+        (postid, username)
+    )
     checking_likes = cur.fetchall()
-    if(len(checking_likes) != 0):
-        #If the “like” already exists, 
-        #return the like object with a 200 response.
+    if (len(checking_likes) != 0):
+        # If the “like” already exists,
+        # return the like object with a 200 response.
         likeid = checking_likes[0]['likeid']
         url = "/api/v1/likes/{}/".format(likeid)
         context['likeid'] = likeid
         context['url'] = url
         return flask.jsonify(**context), 200
     else:
-        #Create one “like” for a specific post. Return 201 on success.
+        # Create one “like” for a specific post. Return 201 on success.
         connection.execute(
-                "INSERT INTO likes(owner,postid) VALUES"
-                "(?,?)",
-                (username, postid)
-            )
+            "INSERT INTO likes(owner,postid) VALUES"
+            "(?,?)",
+            (username, postid)
+        )
         find_new_like = connection.execute(
-                "SELECT * FROM likes "
-                "WHERE postid == ? and owner == ?",
-                (postid, username)
-            )
+            "SELECT * FROM likes "
+            "WHERE postid == ? and owner == ?",
+            (postid, username)
+        )
         like_id = find_new_like.fetchone()['likeid']
         url = "/api/v1/likes/{}/".format(like_id)
         context['likeid'] = like_id
@@ -261,7 +268,7 @@ def create_like():
 
 
 # DELETE /api/v1/likes/<likeid>/
-@insta485.app.route('/api/v1/likes/<likeid>/',methods=['DELETE'])
+@insta485.app.route('/api/v1/likes/<likeid>/', methods=['DELETE'])
 def delete_like(likeid):
     auth = flask.request.authorization
     if 'username' not in flask.session and not auth:
@@ -272,27 +279,27 @@ def delete_like(likeid):
         password = flask.request.authorization['password']
         if not username or not password:
             return flask.jsonify({}), 400
-    
-    #check if the like is already existing
+
+    # check if the like is already existing
     connection = insta485.model.get_db()
     cur = connection.execute(
-            "SELECT * FROM likes "
-            "WHERE likeid == ?"
-            "AND owner = ?",
-            (likeid, username)
-        )
+        "SELECT * FROM likes "
+        "WHERE likeid == ?"
+        "AND owner = ?",
+        (likeid, username)
+    )
     user_own_like = cur.fetchall()
     connection = insta485.model.get_db()
     cur = connection.execute(
-            "SELECT * FROM likes "
-            "WHERE likeid == ?",
-            (likeid,)
-        )
+        "SELECT * FROM likes "
+        "WHERE likeid == ?",
+        (likeid,)
+    )
     likeid_exist = cur.fetchall()
-    if(len(likeid_exist) == 0):
+    if (len(likeid_exist) == 0):
         # If the likeid does not exist, return 404.
         return flask.jsonify({}), 404
-    elif(len(user_own_like) == 0):
+    elif (len(user_own_like) == 0):
         # If the user does not own the like, return 403.
         return flask.jsonify({}), 403
     else:
@@ -320,17 +327,14 @@ def create_comment():
             return flask.jsonify({}), 400
     # return username
     # username = authenticate()'last_insert_rowid()'
-    #initializing context dictionary
+    # initializing context dictionary
     context = {}
-    #get postid from url
+    # get postid from url
     postid = flask.request.args.get('postid')
-    #HINT: sqlite3 provides a special function to retrieve
+    # HINT: sqlite3 provides a special function to retrieve
     #  the ID of the most recently inserted item: SELECT last_insert_rowid().
     connection = insta485.model.get_db()
-    
-    # print("The new comment id we fetch for the first time is ",new_comment_id)
-    # if new_comment_id == 0:
-    #     #it is probabaly that it is the first time to run, and it returns the first id
+
     #     cur1 = connection.execute(
     #         "SELECT MAX(commentid) FROM comments"
     #     )
@@ -339,8 +343,6 @@ def create_comment():
     #     # print("The result is ", result)
     #     # print("=======================")
     #     new_comment_id = result
-    
-        
 
     # print("The new comment id is",new_comment_id)
 
@@ -351,7 +353,6 @@ def create_comment():
     # print(flask.request.get_json())
     text = flask.request.get_json()['text']
     # print("end")
-    # if the comment is not inserted ????? how to know whether it is inserted or not 
     # then return 201
 
     # {
@@ -370,12 +371,11 @@ def create_comment():
     )
 
     cur = connection.execute(
-        #如果一个表中有 INTEGER PRIMARY KEY 列，则该列变成 ROWID 的别名。
-        #the database is comments, so the primary key is comment id
+        # 如果一个表中有 INTEGER PRIMARY KEY 列，则该列变成 ROWID 的别名。
+        # the database is comments, so the primary key is comment id
         "SELECT last_insert_rowid()"
     )
     new_comment_id = cur.fetchall()[0]['last_insert_rowid()']
-
 
     # after the insertion:
     # print("-------------------------------")
@@ -430,7 +430,7 @@ def delete_comment(commentid):
     )
     # print(1)
     comment_id_exist = cur.fetchall()
-    if(len(comment_id_exist) == 0):
+    if (len(comment_id_exist) == 0):
         # If the commentid does not exist, return 404.
         return flask.jsonify({}), 404
     else:

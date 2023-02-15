@@ -72,6 +72,7 @@ describe("Index page when awdeorio is logged in with real database on slow serve
   it("Shows a new comment without a page refresh on slow server", () => {
     // Intercept calls to the /api/v1/comments/?postid=3 route and store a Route Alias
     // called newComment. Later, we can refer to requests to this route using newComment.
+    cy.pause()
     cy.intercept("POST", "/api/v1/comments/?postid=3").as("newComment");
 
     // Go to the home page.
