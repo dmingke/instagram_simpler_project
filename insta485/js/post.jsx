@@ -2,7 +2,7 @@ import React, { useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import moment from "moment";
-import Comments from "./comments"
+
 
 
 // The parameter of this function is an object with a string called url inside it.
@@ -270,6 +270,67 @@ function Post({props}){
   }
 
 
+
+
+
+
+  function handle_delete_function(event){
+    const delete_url = event.target.id;
+    // changeComment(delete_url)
+    fetch(delete_url , { method: 'DELETE' })
+      .then(() => 
+      {
+          fetch(props, { credentials: 'same-origin' })
+          .then((response) => {
+          if (!response.ok) throw Error(response.statusText);
+          return response.json();
+          })
+          .then((data) => {
+              setComments(data.comments)
+              setCommentsUrl(data.comments_url)
+          })
+          .catch(error => console.log(error));
+
+      });
+  }
+
+  // var a =  Comments(){
+  //   console.log("go to the comments function ")
+    const show_comments = comments.map((comment) =>{
+        if(comment.lognameOwnsThis)
+          return 
+          <div>
+          <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
+          <button className="delete-comment-button" type="submit" onClick={handle_delete_function} id={comment.url}>delete</button>
+         </div>
+        return 
+        <div>
+          <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
+        </div>
+
+    })
+
+    console.log("printting this",show_comments)
+  // }
+
+  // function Comment(commenturl,comm_lognameOwnsThis,comm_owner,comm_text){
+  //   let cbutton;
+  //   function deleteComment() {
+  //       changeComment(comment.url)
+  //   }
+  //   if (comment.lognameOwnsThis) {
+  //       cbutton = <button className="delete-comment-button" type="submit" onClick={deleteComment}>delete</button>
+  //   }
+  //   return (
+  //       <div>
+  //           <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
+  //           {cbutton}
+  //       </div>
+  //   )
+  // }
+
+
+
         function handleChange(event) {
             event.preventDefault()
             const newtext = event.target.value;
@@ -299,24 +360,6 @@ function Post({props}){
         if (!checkingCompleted){
           return <p> please wait... </p>
         }
-  
-  
-        function Comments(){
-
-          const show_comments = comments.map((comment) =>{
-              if(comment.lognameOwnsThis)
-                return 
-                <div>
-                <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
-                <button className="delete-comment-button" type="submit" onClick={deleteComment}>delete</button>
-               </div>
-              return 
-              <div>
-                <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
-              </div>
-            }
-          )
-        }
 
         return(
           <div>
@@ -326,7 +369,8 @@ function Post({props}){
           <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396px" height="350px"/></div>
           <p>{numLikes} {numLikes===1 ? "like" : "likes"}</p>
           <button type="submit" className="like-unlike-button" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
-          <Comments key={comUrl} comments={comments} changeComment={changeComment}/>
+          {/* <Comments key={comUrl} changeComment={changeComment}/> */}
+          {show_comments}
           <form className="comment-form">
           <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={newCom}/>
           </form>
