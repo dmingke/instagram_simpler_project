@@ -11,7 +11,7 @@ export default function Posts({ url }) {
   /* Display image and post owner of a single post */
     const [next, setNext] = useState("");
     const [results, setResult] = useState([]);
-    const [hasMore, setHasMore] = useState(true);
+    let hasMore = true;
     const [newResult, setNew] = useState([])
     useEffect(() => {
       // Declare a boolean flag that we can use to cancel the API request.
@@ -37,7 +37,7 @@ export default function Posts({ url }) {
    
   const fetchData = async() => {
       if (next === "") {
-        setHasMore(false)
+        hasMore = false;
         return;
       }
       fetch(next, { credentials: 'same-origin' })
@@ -76,7 +76,6 @@ function Post({props}){
       const [ownerImgUrl, setOwnerImg] = useState("");
       const [comments,setComments] = useState([]);
       const [created,setCreated] = useState("");
-      const [,setLikes] = useState({});
       const [ownerShowUrl, setOwnerUrl] = useState('');
       const [postShowUrl, setPostUrl] = useState('');
       const [liked, setLiked] = useState(false);
@@ -97,10 +96,8 @@ function Post({props}){
       })
       .then((data) => {
         if (!ignoreStaleRequest) {
-          // setNext(data.next)
           setComments(data.comments)
           setCreated(data.created)
-          setLikes(data.likes)
           setOwner(data.owner)
           setOwnerImg(data.ownerImgUrl)
           setImgUrl(data.imgUrl)
@@ -124,7 +121,6 @@ function Post({props}){
 
       // like button section ^_^ 1
       function HandleLiked(){
-          // const [likid, setlikeid] = useState(-1);
           if (!liked) {
             const requestOptions = {
               method: 'POST',
@@ -222,21 +218,19 @@ function Post({props}){
 
   function handleDelete(event){
     const deleteUrl = event.target.id;
-    fetch(deleteUrl , { method: 'DELETE' })
+    const requestOptions = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    };
+    fetch(deleteUrl, requestOptions,{ credentials: 'same-origin' })
       .then(() => 
       {
-          fetch(props, { credentials: 'same-origin' })
-          .then((response) => {
-          if (!response.ok) throw Error(response.statusText);
-          return response.json();
+        const newComm = comments.filter((comment)=>comment.url !== event.target.id);
+        setComments(newComm)
+        // setCommentsUrl(data.comments_url)
           })
-          .then((data) => {
-              setComments(data.comments)
-              setCommentsUrl(data.comments_url)
-          })
-          .catch(error => console.log(error));
-
-      });
+      .catch(error => console.log(error));
   }
 
   // var a =  Comments(){
@@ -277,8 +271,8 @@ function Post({props}){
                     return response.json();
                 })
                 .then((data)=>{
-                    setComments(prevComments =>[...prevComments,data]
-                    )
+                    setComments(comments.concat(data))
+                    
                 })
                 setNewAddedComment("")      
             }
@@ -286,6 +280,10 @@ function Post({props}){
         }
         if (!checkingCompleted){
           return <p> please wait... </p>
+        }
+
+        function handleSubmit(event) {
+          event.preventDefault();
         }
 
         return(
@@ -297,7 +295,7 @@ function Post({props}){
           <p>{numLikes} {numLikes===1 ? "like" : "likes"}</p>
           <button type="submit" className="like-unlike-button" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
           {showComments}
-          <form className="comment-form">
+          <form className="comment-form" onSubmit={handleSubmit}>
           <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={newCom}/>
           </form>
           </div>
