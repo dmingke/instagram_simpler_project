@@ -223,20 +223,15 @@ function Post({props}){
   function handleDelete(event){
     const deleteUrl = event.target.id;
     fetch(deleteUrl , { method: 'DELETE' })
-      .then(() => 
-      {
-          fetch(props, { credentials: 'same-origin' })
-          .then((response) => {
-          if (!response.ok) throw Error(response.statusText);
-          return response.json();
-          })
-          .then((data) => {
-              setComments(data.comments)
-              setCommentsUrl(data.comments_url)
-          })
-          .catch(error => console.log(error));
-
-      });
+    .then((response) => {
+      if (!response.ok) throw Error(response.statusText);
+      return response.json();
+      })
+    .then((data) => {
+        setComments(data.comments)
+        setCommentsUrl(data.comments_url)
+    })
+    .catch(error => console.log(error));
   }
 
   // var a =  Comments(){
@@ -296,7 +291,6 @@ function Post({props}){
           <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396" height="350"/></div>
           <p>{numLikes} {numLikes===1 ? "like" : "likes"}</p>
           <button type="submit" className="like-unlike-button" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
-          {/* <Comments key={comUrl} changeComment={changeComment}/> */}
           {showComments}
           <form className="comment-form">
           <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={newCom}/>
