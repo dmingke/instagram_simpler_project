@@ -175,35 +175,7 @@ function Post({props}){
 
       // end like button ^_^ 1
 
-      // change when we comment
-      function handleChange(event) {
-        event.preventDefault()
-        // var key = event.key;
-        const newtext = event.target.value;
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: newtext })
-        };
-        
-        var key = event.key;
-        if (key === "Enter") {
-          fetch(comUrl, requestOptions,{ credentials: 'same-origin' })
-          .then((response) => {
-            if (!response.ok) throw Error(response.statusText);
-            return response.json();
-          })
-          .then((data)=>{
-              setComments(prevComments =>[...prevComments,data]
-              )
-          })
-        }else{
-          console.log(key)
-          // console.log("hihihihihihihi")
-        }
-        
-
-      }
+      
 
      
     // started working on double click ^_^ 2
@@ -247,37 +219,10 @@ function Post({props}){
     }
     }
     // end double click ^_^ 2
-    
 
-  const changeComment= (commenturl)=>{
-
-      fetch(commenturl, { method: 'DELETE' })
-      .then(() => 
-      {
-          fetch(props, { credentials: 'same-origin' })
-          .then((response) => {
-          if (!response.ok) throw Error(response.statusText);
-          return response.json();
-          })
-          .then((data) => {
-              setComments(data.comments)
-              setCommentsUrl(data.comments_url)
-          })
-          .catch(error => console.log(error));
-
-      });
-
-  }
-
-
-
-
-
-
-  function handle_delete_function(event){
-    const delete_url = event.target.id;
-    // changeComment(delete_url)
-    fetch(delete_url , { method: 'DELETE' })
+  function handleDelete(event){
+    const deleteUrl = event.target.id;
+    fetch(deleteUrl , { method: 'DELETE' })
       .then(() => 
       {
           fetch(props, { credentials: 'same-origin' })
@@ -296,14 +241,17 @@ function Post({props}){
 
   // var a =  Comments(){
   //   console.log("go to the comments function ")
-    const show_comments = comments.map((comment) =>{
+    const showComments = comments.map((comment) =>{
         if(comment.lognameOwnsThis)
-        return (<div>
+        return (
+        <div key={comment.commentid}>
             <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
-            <button className="delete-comment-button" type="submit" onClick={handle_delete_function} id={comment.url}>delete</button>
+            <button className="delete-comment-button" type="submit" onClick={handleDelete} id={comment.url}>delete</button>
             {/* <button>{comment.owner}</button> */}
-          </div>)
-        return(<div>
+        </div>
+        )
+        return(
+        <div key={comment.commentid}>
           <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
         </div>)
     })
@@ -342,14 +290,14 @@ function Post({props}){
 
         return(
           <div>
-          <a href={ownerShowUrl}><img src={ownerImgUrl} alt="men 1" width="50px" height="46px"/></a>
+          <a href={ownerShowUrl}><img src={ownerImgUrl} alt="men 1" width="50" height="46"/></a>
           <a href={ownerShowUrl}>{owner}</a>
           <a href={postShowUrl}>{time}</a>
-          <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396px" height="350px"/></div>
+          <div><img src={imgUrl} onDoubleClick={handleDoubleClick} alt="post_image" width="396" height="350"/></div>
           <p>{numLikes} {numLikes===1 ? "like" : "likes"}</p>
           <button type="submit" className="like-unlike-button" onClick={HandleLiked}>{liked ? 'unlike' : 'like'}</button>
           {/* <Comments key={comUrl} changeComment={changeComment}/> */}
-          {show_comments}
+          {showComments}
           <form className="comment-form">
           <input onChange={handleChange} onKeyDown={handleKeyDown} type="text" value={newCom}/>
           </form>
