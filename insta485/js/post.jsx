@@ -299,6 +299,24 @@ function Post({props}){
         if (!checkingCompleted){
           return <p> please wait... </p>
         }
+  
+  
+        function Comments(){
+
+          const show_comments = comments.map((comment) =>{
+              if(comment.lognameOwnsThis)
+                return 
+                <div>
+                <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
+                <button className="delete-comment-button" type="submit" onClick={deleteComment}>delete</button>
+               </div>
+              return 
+              <div>
+                <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
+              </div>
+            }
+          )
+        }
 
         return(
           <div>
