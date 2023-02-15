@@ -5,6 +5,7 @@ import insta485
 
 @insta485.app.route('/api/v1/', methods=["GET"])
 def get_services():
+    """Doc."""
     # Return a list of services available. The output
     # should look exactly like this example.
     # Does not require user to be authenticated.
@@ -20,6 +21,7 @@ def get_services():
 
 @insta485.app.route('/api/v1/posts/', methods=["GET"])
 def get_post():
+    """Doc."""
     # Return the 10 newest posts.
     # each post is made by a user which the logged in user follows
     # or the post is made by the logged in user.
@@ -99,6 +101,7 @@ def get_post():
 
 @insta485.app.route('/api/v1/posts/<int:postid_url_slug>/', methods=['GET'])
 def get_post1(postid_url_slug):
+    """Doc."""
     # checking authorization...
     auth = flask.request.authorization
     if 'username' not in flask.session and not auth:
@@ -214,6 +217,7 @@ def get_post1(postid_url_slug):
 
 @insta485.app.route('/api/v1/likes/', methods=['POST'])
 def create_like():
+    """Doc."""
     # checking authorization...
     auth = flask.request.authorization
     if 'username' not in flask.session and not auth:
@@ -270,6 +274,7 @@ def create_like():
 # DELETE /api/v1/likes/<likeid>/
 @insta485.app.route('/api/v1/likes/<likeid>/', methods=['DELETE'])
 def delete_like(likeid):
+    """Doc."""
     auth = flask.request.authorization
     if 'username' not in flask.session and not auth:
         flask.abort(403)
@@ -315,6 +320,7 @@ def delete_like(likeid):
 
 @insta485.app.route('/api/v1/comments/', methods=['POST'])
 def create_comment():
+    """Doc."""
     auth = flask.request.authorization
     """return create comment """
     if 'username' not in flask.session and not auth:
@@ -408,6 +414,7 @@ def create_comment():
 # DELETE /api/v1/comments/<commentid>/
 @insta485.app.route('/api/v1/comments/<commentid>/', methods=['DELETE'])
 def delete_comment(commentid):
+    """Doc."""
     auth = flask.request.authorization
     """delete a comment"""
     if 'username' not in flask.session and not auth:
