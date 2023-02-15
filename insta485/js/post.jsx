@@ -13,22 +13,28 @@ export default function Posts({ url }) {
     const [results, setResult] = useState([]);
     const [hasMore, setHasMore] = useState(true);
     const [newResult, setNew] = useState([])
-
+    useEffect(() => {
       // Declare a boolean flag that we can use to cancel the API request.
-
+      let ignoreStaleRequest = false;
     fetch(url, { credentials: 'same-origin' })
     .then((response) => {
       if (!response.ok) throw Error(response.statusText);
       return response.json();
     })
     .then((data) => {
+      if (!ignoreStaleRequest) {
         setNext(data.next)
         setResult(data.results)
         setNew(data.results)
         }
-      )
+      })
     .catch(error => console.log(error));
-
+    return () => {
+      ignoreStaleRequest = true;
+    };
+    }, [url]);
+    
+   
   const fetchData = async() => {
       if (next === "") {
         setHasMore(false)
@@ -56,7 +62,6 @@ export default function Posts({ url }) {
       next={fetchData}
       hasMore={hasMore}
       loader={<h4>Loading...</h4>}
-      key="infinite"
       >
       <div>
         {newResult.map((result)=><Post key={result.postid} props = {result.url}/>)}
@@ -260,7 +265,6 @@ function Post({props}){
         }
 
         function handleKeyDown(event){
-
             const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
