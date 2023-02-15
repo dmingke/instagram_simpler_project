@@ -298,36 +298,15 @@ function Post({props}){
   //   console.log("go to the comments function ")
     const show_comments = comments.map((comment) =>{
         if(comment.lognameOwnsThis)
-          return 
-          <div>
+        return (<div>
+            <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
+            <button className="delete-comment-button" type="submit" onClick={handle_delete_function} id={comment.url}>delete</button>
+            {/* <button>{comment.owner}</button> */}
+          </div>)
+        return(<div>
           <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
-          <button className="delete-comment-button" type="submit" onClick={handle_delete_function} id={comment.url}>delete</button>
-         </div>
-        return 
-        <div>
-          <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
-        </div>
-
+        </div>)
     })
-
-    console.log("printting this",show_comments)
-  // }
-
-  // function Comment(commenturl,comm_lognameOwnsThis,comm_owner,comm_text){
-  //   let cbutton;
-  //   function deleteComment() {
-  //       changeComment(comment.url)
-  //   }
-  //   if (comment.lognameOwnsThis) {
-  //       cbutton = <button className="delete-comment-button" type="submit" onClick={deleteComment}>delete</button>
-  //   }
-  //   return (
-  //       <div>
-  //           <span className="comment-text"><strong><a href={comment.ownerShowUrl}>{comment.owner}</a></strong>{comment.text}</span>
-  //           {cbutton}
-  //       </div>
-  //   )
-  // }
 
 
 
