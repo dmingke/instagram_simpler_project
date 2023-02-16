@@ -1,80 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./insta485/js/comment.jsx":
-/*!*********************************!*\
-  !*** ./insta485/js/comment.jsx ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Comment)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function Comment(_ref) {
-  var comment = _ref.comment,
-    changeComment = _ref.changeComment;
-  var cbutton;
-  function deleteComment() {
-    changeComment(comment.url);
-  }
-  if (comment.lognameOwnsThis) {
-    cbutton = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "delete-comment-button",
-      type: "submit",
-      onClick: deleteComment
-    }, "delete");
-  }
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: "comment-text"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-    href: comment.ownerShowUrl
-  }, comment.owner)), comment.text), cbutton);
-}
-Comment.propTypes = {
-  comment: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().object.isRequired),
-  changeComment: (prop_types__WEBPACK_IMPORTED_MODULE_1___default().func)
-};
-
-/***/ }),
-
-/***/ "./insta485/js/comments.jsx":
-/*!**********************************!*\
-  !*** ./insta485/js/comments.jsx ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Comments)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _comment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./comment */ "./insta485/js/comment.jsx");
-
-
-function Comments(_ref) {
-  var comments = _ref.comments,
-    changeComment = _ref.changeComment;
-  return comments.map(function (comment) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_comment__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      key: comment.commentid,
-      comment: comment,
-      changeComment: changeComment
-    });
-  });
-}
-
-/***/ }),
-
 /***/ "./insta485/js/post.jsx":
 /*!******************************!*\
   !*** ./insta485/js/post.jsx ***!
@@ -86,21 +12,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Posts)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var react_infinite_scroll_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-infinite-scroll-component */ "./node_modules/react-infinite-scroll-component/dist/index.es.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _comments__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./comments */ "./insta485/js/comments.jsx");
-
-
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react_infinite_scroll_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-infinite-scroll-component */ "./node_modules/react-infinite-scroll-component/dist/index.es.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
@@ -114,27 +36,24 @@ __webpack_require__.r(__webpack_exports__);
 function Posts(_ref) {
   var url = _ref.url;
   /* Display image and post owner of a single post */
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(""),
-    _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState, 2),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState, 2),
     next = _useState2[0],
     setNext = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)([]),
-    _useState4 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState3, 2),
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)([]),
+    _useState4 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState3, 2),
     results = _useState4[0],
     setResult = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(true),
-    _useState6 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState5, 2),
-    hasMore = _useState6[0],
-    setHasMore = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)([]),
-    _useState8 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState7, 2),
-    newResult = _useState8[0],
-    setNew = _useState8[1];
-  (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
+  var hasMore = true;
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)([]),
+    _useState6 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState5, 2),
+    newResult = _useState6[0],
+    setNew = _useState6[1];
+  (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(function () {
     // Declare a boolean flag that we can use to cancel the API request.
     var ignoreStaleRequest = false;
     fetch(url, {
-      credentials: 'same-origin'
+      credentials: "same-origin"
     }).then(function (response) {
       if (!response.ok) throw Error(response.statusText);
       return response.json();
@@ -152,19 +71,19 @@ function Posts(_ref) {
     };
   }, [url]);
   var fetchData = /*#__PURE__*/function () {
-    var _ref2 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().mark(function _callee() {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().wrap(function _callee$(_context) {
+    var _ref2 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             if (!(next === "")) {
               _context.next = 3;
               break;
             }
-            setHasMore(false);
+            hasMore = false;
             return _context.abrupt("return");
           case 3:
             fetch(next, {
-              credentials: 'same-origin'
+              credentials: "same-origin"
             }).then(function (response) {
               if (!response.ok) throw Error(response.statusText);
               return response.json();
@@ -184,13 +103,13 @@ function Posts(_ref) {
       return _ref2.apply(this, arguments);
     };
   }();
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement(react_infinite_scroll_component__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement(react_infinite_scroll_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
     dataLength: newResult.length,
     next: fetchData,
     hasMore: hasMore,
-    loader: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("h4", null, "Loading...")
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("div", null, newResult.map(function (result) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement(Post, {
+    loader: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("h4", null, "Loading...")
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("div", null, newResult.map(function (result) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement(Post, {
       key: result.postid,
       props: result.url
     });
@@ -198,78 +117,73 @@ function Posts(_ref) {
 }
 function Post(_ref3) {
   var props = _ref3.props;
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(""),
-    _useState10 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState9, 2),
-    imgUrl = _useState10[0],
-    setImgUrl = _useState10[1];
-  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(""),
-    _useState12 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState11, 2),
-    owner = _useState12[0],
-    setOwner = _useState12[1];
-  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(""),
-    _useState14 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState13, 2),
-    ownerImgUrl = _useState14[0],
-    setOwnerImg = _useState14[1];
-  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)([]),
-    _useState16 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState15, 2),
-    comments = _useState16[0],
-    setComments = _useState16[1];
-  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(""),
-    _useState18 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState17, 2),
-    created = _useState18[0],
-    setCreated = _useState18[1];
-  var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)({}),
-    _useState20 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState19, 2),
-    setLikes = _useState20[1];
-  var _useState21 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(''),
-    _useState22 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState21, 2),
-    ownerShowUrl = _useState22[0],
-    setOwnerUrl = _useState22[1];
-  var _useState23 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(''),
-    _useState24 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState23, 2),
-    postShowUrl = _useState24[0],
-    setPostUrl = _useState24[1];
-  var _useState25 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(false),
-    _useState26 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState25, 2),
-    liked = _useState26[0],
-    setLiked = _useState26[1];
-  var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(''),
-    _useState28 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState27, 2),
-    likeURL = _useState28[0],
-    setLikeUrl = _useState28[1];
-  var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(0),
-    _useState30 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState29, 2),
-    postid = _useState30[0],
-    setPostid = _useState30[1];
-  var _useState31 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(""),
-    _useState32 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState31, 2),
-    comUrl = _useState32[0],
-    setCommentsUrl = _useState32[1];
-  var _useState33 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(0),
-    _useState34 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState33, 2),
-    numLikes = _useState34[0],
-    setNumLikes = _useState34[1];
-  var _useState35 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(""),
-    _useState36 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState35, 2),
-    newCom = _useState36[0],
-    setNewAddedComment = _useState36[1];
-  var _useState37 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(false),
-    _useState38 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__["default"])(_useState37, 2),
-    checkingCompleted = _useState38[0],
-    setCheckingCompleted = _useState38[1];
-  (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState8 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState7, 2),
+    imgUrl = _useState8[0],
+    setImgUrl = _useState8[1];
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState10 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState9, 2),
+    owner = _useState10[0],
+    setOwner = _useState10[1];
+  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState12 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState11, 2),
+    ownerImgUrl = _useState12[0],
+    setOwnerImg = _useState12[1];
+  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)([]),
+    _useState14 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState13, 2),
+    comments = _useState14[0],
+    setComments = _useState14[1];
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState16 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState15, 2),
+    created = _useState16[0],
+    setCreated = _useState16[1];
+  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState18 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState17, 2),
+    ownerShowUrl = _useState18[0],
+    setOwnerUrl = _useState18[1];
+  var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState20 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState19, 2),
+    postShowUrl = _useState20[0],
+    setPostUrl = _useState20[1];
+  var _useState21 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false),
+    _useState22 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState21, 2),
+    liked = _useState22[0],
+    setLiked = _useState22[1];
+  var _useState23 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState24 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState23, 2),
+    likeURL = _useState24[0],
+    setLikeUrl = _useState24[1];
+  var _useState25 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0),
+    _useState26 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState25, 2),
+    postid = _useState26[0],
+    setPostid = _useState26[1];
+  var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState28 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState27, 2),
+    comUrl = _useState28[0],
+    setCommentsUrl = _useState28[1];
+  var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0),
+    _useState30 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState29, 2),
+    numLikes = _useState30[0],
+    setNumLikes = _useState30[1];
+  var _useState31 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(""),
+    _useState32 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState31, 2),
+    newCom = _useState32[0],
+    setNewAddedComment = _useState32[1];
+  var _useState33 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false),
+    _useState34 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState33, 2),
+    checkingCompleted = _useState34[0],
+    setCheckingCompleted = _useState34[1];
+  (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(function () {
     var ignoreStaleRequest = false;
     fetch(props, {
-      credentials: 'same-origin'
+      credentials: "same-origin"
     }).then(function (response) {
       if (!response.ok) throw Error(response.statusText);
       return response.json();
     }).then(function (data) {
       if (!ignoreStaleRequest) {
-        // setNext(data.next)
         setComments(data.comments);
         setCreated(data.created);
-        setLikes(data.likes);
         setOwner(data.owner);
         setOwnerImg(data.ownerImgUrl);
         setImgUrl(data.imgUrl);
@@ -289,22 +203,21 @@ function Post(_ref3) {
       ignoreStaleRequest = true;
     };
   }, [props]);
-  var time = moment__WEBPACK_IMPORTED_MODULE_6___default()(created).fromNow();
+  var time = moment__WEBPACK_IMPORTED_MODULE_5___default()(created).fromNow();
 
   // like button section ^_^ 1
   function HandleLiked() {
-    // const [likid, setlikeid] = useState(-1);
     if (!liked) {
       var requestOptions = {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({})
       };
       var linkPostLike = "/api/v1/likes/?postid=".concat(String(postid));
       fetch(linkPostLike, requestOptions, {
-        credentials: 'same-origin'
+        credentials: "same-origin"
       }).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
@@ -323,14 +236,14 @@ function Post(_ref3) {
     } else {
       var link = likeURL;
       var _requestOptions = {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({})
       };
       fetch(link, _requestOptions, {
-        credentials: 'same-origin'
+        credentials: "same-origin"
       }).then(function () {
         setNumLikes(function (prevnum) {
           var newlikenu = prevnum - 1;
@@ -344,53 +257,21 @@ function Post(_ref3) {
 
   // end like button ^_^ 1
 
-  // change when we comment
-  function handleChange(event) {
-    event.preventDefault();
-    // var key = event.key;
-    var newtext = event.target.value;
-    var requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        text: newtext
-      })
-    };
-    var key = event.key;
-    if (key === "Enter") {
-      fetch(comUrl, requestOptions, {
-        credentials: 'same-origin'
-      }).then(function (response) {
-        if (!response.ok) throw Error(response.statusText);
-        return response.json();
-      }).then(function (data) {
-        setComments(function (prevComments) {
-          return [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(prevComments), [data]);
-        });
-      });
-    } else {
-      console.log(key);
-      // console.log("hihihihihihihi")
-    }
-  }
-
   // started working on double click ^_^ 2
   function handleDoubleClick() {
     // console.log("double click successfully")
     if (!liked) {
       console.log("double click successfully");
       var requestOptions = {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({})
       };
       var linkPostLike = "/api/v1/likes/?postid=".concat(String(postid));
       fetch(linkPostLike, requestOptions, {
-        credentials: 'same-origin'
+        credentials: "same-origin"
       }).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
@@ -415,23 +296,51 @@ function Post(_ref3) {
   }
   // end double click ^_^ 2
 
-  var changeComment = function changeComment(commenturl) {
-    fetch(commenturl, {
-      method: 'DELETE'
+  function handleDelete(event) {
+    var deleteUrl = event.target.id;
+    var requestOptions = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({})
+    };
+    fetch(deleteUrl, requestOptions, {
+      credentials: "same-origin"
     }).then(function () {
-      fetch(props, {
-        credentials: 'same-origin'
-      }).then(function (response) {
-        if (!response.ok) throw Error(response.statusText);
-        return response.json();
-      }).then(function (data) {
-        setComments(data.comments);
-        setCommentsUrl(data.comments_url);
-      })["catch"](function (error) {
-        return console.log(error);
+      var newComm = comments.filter(function (comment) {
+        return comment.url !== event.target.id;
       });
+      setComments(newComm);
+      // setCommentsUrl(data.comments_url)
+    })["catch"](function (error) {
+      return console.log(error);
     });
-  };
+  }
+
+  // var a =  Comments(){
+  //   console.log("go to the comments function ")
+  var showComments = comments.map(function (comment) {
+    if (comment.lognameOwnsThis) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("div", {
+      key: comment.commentid
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("span", {
+      className: "comment-text"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("strong", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("a", {
+      href: comment.ownerShowUrl
+    }, comment.owner)), comment.text), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("button", {
+      className: "delete-comment-button",
+      type: "submit",
+      onClick: handleDelete,
+      id: comment.url
+    }, "delete"));
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("div", {
+      key: comment.commentid
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("span", {
+      className: "comment-text"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("strong", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("a", {
+      href: comment.ownerShowUrl
+    }, comment.owner)), comment.text));
+  });
   function handleChange(event) {
     event.preventDefault();
     var newtext = event.target.value;
@@ -439,59 +348,57 @@ function Post(_ref3) {
   }
   function handleKeyDown(event) {
     var requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         text: newCom
       })
     };
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       fetch(comUrl, requestOptions, {
-        credentials: 'same-origin'
+        credentials: "same-origin"
       }).then(function (response) {
         if (!response.ok) throw Error(response.statusText);
         return response.json();
       }).then(function (data) {
-        setComments(function (prevComments) {
-          return [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(prevComments), [data]);
-        });
+        setComments(comments.concat(data));
       });
       setNewAddedComment("");
     }
   }
   if (!checkingCompleted) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("p", null, " please wait... ");
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("p", null, " please wait... ");
   }
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("a", {
+  function handleSubmit(event) {
+    event.preventDefault();
+  }
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("a", {
     href: ownerShowUrl
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("img", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("img", {
     src: ownerImgUrl,
     alt: "men 1",
-    width: "50px",
-    height: "46px"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("a", {
+    width: "50",
+    height: "46"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("a", {
     href: ownerShowUrl
-  }, owner), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("a", {
+  }, owner), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("a", {
     href: postShowUrl
-  }, time), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("img", {
+  }, time), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("img", {
     src: imgUrl,
     onDoubleClick: handleDoubleClick,
     alt: "post_image",
-    width: "396px",
-    height: "350px"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("p", null, numLikes, " ", numLikes === 1 ? "like" : "likes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("button", {
+    width: "396",
+    height: "350"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("p", null, numLikes, " ", numLikes === 1 ? "like" : "likes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("button", {
     type: "submit",
     className: "like-unlike-button",
     onClick: HandleLiked
-  }, liked ? 'unlike' : 'like'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement(_comments__WEBPACK_IMPORTED_MODULE_7__["default"], {
-    key: comUrl,
-    comments: comments,
-    changeComment: changeComment
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("form", {
-    className: "comment-form"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("input", {
+  }, liked ? "unlike" : "like"), showComments, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("form", {
+    className: "comment-form",
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement("input", {
     onChange: handleChange,
     onKeyDown: handleKeyDown,
     type: "text",
@@ -499,10 +406,10 @@ function Post(_ref3) {
   })));
 }
 Posts.propTypes = {
-  url: (prop_types__WEBPACK_IMPORTED_MODULE_8___default().string.isRequired)
+  url: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().string.isRequired)
 };
 Post.propTypes = {
-  props: (prop_types__WEBPACK_IMPORTED_MODULE_8___default().string.isRequired)
+  props: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().string.isRequired)
 };
 
 /***/ }),
@@ -57436,25 +57343,6 @@ function _arrayWithHoles(arr) {
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _arrayWithoutHoles)
-/* harmony export */ });
-/* harmony import */ var _arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js");
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr);
-}
-
-/***/ }),
-
 /***/ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js":
 /*!*********************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js ***!
@@ -57495,23 +57383,6 @@ function _asyncToGenerator(fn) {
       _next(undefined);
     });
   };
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArray.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _iterableToArray)
-/* harmony export */ });
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
 
 /***/ }),
@@ -57574,23 +57445,6 @@ function _nonIterableRest() {
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _nonIterableSpread)
-/* harmony export */ });
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-/***/ }),
-
 /***/ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js":
 /*!******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js ***!
@@ -57612,31 +57466,6 @@ __webpack_require__.r(__webpack_exports__);
 
 function _slicedToArray(arr, i) {
   return (0,_arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr) || (0,_iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__["default"])(arr, i) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(arr, i) || (0,_nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _toConsumableArray)
-/* harmony export */ });
-/* harmony import */ var _arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithoutHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js");
-/* harmony import */ var _iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js");
-/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
-/* harmony import */ var _nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableSpread.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js");
-
-
-
-
-function _toConsumableArray(arr) {
-  return (0,_arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr) || (0,_iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__["default"])(arr) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(arr) || (0,_nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
 }
 
 /***/ }),
