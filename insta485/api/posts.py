@@ -49,10 +49,10 @@ def get_post():
         "where username1 == ?)",
         (logname, logname, )
     ).fetchall()
-    numPost = len(total_post)
-    newest = total_post[numPost-1]['postid']
+    # num_post = len(total_post)
+    newest = total_post[len(total_post)-1]['postid']
     # if postid_lte is not specified
-    if (postid_if_user is None):
+    if postid_if_user is None:
         # postid_if_user = flask.request.args.get("page"
         selected_postid = connection.execute(
             "SELECT postid,  ('/api/v1/posts/' || postid ||\
@@ -64,12 +64,10 @@ def get_post():
             (logname, logname, size, size*page,)
         ).fetchall()
         results = list(selected_postid)
-        if size*(page+1) <= numPost:
+        n_e = ""
+        if size*(page+1) <= len(total_post):
             # ?????????what is the page (the max)
-            next = "/api/v1/posts/?size={}&page={}&postid_lte={}".format(
-                size, page+1, newest)
-        else:
-            next = ""
+            n_e = f"/api/v1/posts/?size={size}&page={page+1}&postid_lte={newest}"
     #  if specified
     else:
         selected = connection.execute(
@@ -82,133 +80,132 @@ def get_post():
             (logname, logname, postid_if_user,)
         ).fetchall()
         results = []
-        for id in selected:
+        for i in selected:
             if int(postid_if_user)-size*page >= 0:
-                if int(id['postid']) <= int(postid_if_user)-size*page:
-                    results.append(id)
-        if size*(page+1) + 1 <= numPost:
-            next = "/api/v1/posts/?size={}&page={}&postid_lte={}".format(
-                size, page+1, newest)
+                if int(i['postid']) <= int(postid_if_user)-size*page:
+                    results.append(i)
+        if size*(page+1) + 1 <= len(total_post):
+            n_e = f"/api/v1/posts/?size={size}&page={page+1}&postid_lte={newest}"
         else:
-            next = ""
+            n_e = ""
     context = {
-        "next": next,
+        "next": n_e,
         "results": results,
         "url": flask.request.full_path.rstrip("?"),
     }
     return flask.jsonify(**context), 200
 
 
+def check_help():
+    """Doc."""
+    if 'username' not in flask.session and not flask.request.authorization:
+        flask.abort(403)
+
+
+def check_user_pass():
+    """Doc."""
+    return flask.jsonify({}), 400
+
+
 @insta485.app.route('/api/v1/posts/<int:postid_url_slug>/', methods=['GET'])
 def get_post1(postid_url_slug):
     """Doc."""
     # checking authorization...
-    auth = flask.request.authorization
-    if 'username' not in flask.session and not auth:
-        flask.abort(403)
+    # auth = flask.request.authorization
+    check_help()
     username = flask.session.get('username')
     if not username:
         username = flask.request.authorization['username']
-        password = flask.request.authorization['password']
-        if not username or not password:
-            return flask.jsonify({}), 400
 
     # get post info from db
-    connection = insta485.model.get_db()
-    largest = connection.execute(
-        "SELECT postid "
-        "FROM posts"
+    # connection = insta485.model.get_db()
+    largest = insta485.model.get_db().execute(
+        "SELECT postid FROM posts"
     ).fetchall()
-    numPost = len(largest)
-    newest = largest[numPost-1]['postid']
-    if postid_url_slug > newest:
+    if postid_url_slug > largest[len(largest)-1]['postid']:
         return flask.jsonify({}), 404
-    cur = connection.execute(
+    post = insta485.model.get_db().execute(
         "SELECT filename,owner,created FROM posts "
         "WHERE postid=?",
         (postid_url_slug, )
-    )
-    post = cur.fetchone()
-    filename = '/uploads/' + post['filename']
-    owner = post['owner']
+    ).fetchone()
+    # filename = '/uploads/' + post['filename']
+    # owner = post['owner']
 
     # get post owner info from db
-    cur = connection.execute(
+    curr = insta485.model.get_db().execute(
         "SELECT filename FROM users "
         "WHERE username=?",
-        (owner, )
+        (post['owner'], )
     )
-    userimage = '/uploads/' + cur.fetchone()['filename']
-    ownerurl = "/users/{}/".format(owner)
 
     # get comment info from db
-    cur = connection.execute(
+    allcomment = insta485.model.get_db().execute(
         "SELECT * FROM comments "
         "WHERE postid=?",
         (postid_url_slug, )
-    )
-    allcomment = cur.fetchall()
+    ).fetchall()
     comments_list = []
     for comment in allcomment:
-        loguser_create_this_comment = False
+        # loguser_create_this_comment = False
         singlecomment = {}
         singlecomment['commentid'] = comment['commentid']
         singlecomment['owner'] = comment['owner']
+        singlecomment['lognameOwnsThis'] = False
         # print(flask.session.get('username'))
-        if (comment['owner'] == username):
-            loguser_create_this_comment = True
-        singlecomment['lognameOwnsThis'] = loguser_create_this_comment
-        ownerurl = "/users/{}/".format(comment['owner'])
-        singlecomment['ownerShowUrl'] = ownerurl
+        if comment['owner'] == username:
+            singlecomment['lognameOwnsThis'] = True
+        # singlecomment['lognameOwnsThis'] = loguser_create_this_comment
+        # ownerurl = "/users/{}/".format(comment['owner'])
+        singlecomment['ownerShowUrl'] = f"/users/{comment['owner']}/"
         singlecomment['text'] = comment['text']
-        comment_url = "/api/v1/comments/{}/".format(singlecomment['commentid'])
-        singlecomment['url'] = comment_url
+        # comment_url = "/api/v1/comments/{}/".format(singlecomment['commentid'])
+        singlecomment['url'] = f"/api/v1/comments/{singlecomment['commentid']}/"
         comments_list.append(singlecomment)
 
     # get post being liked condition from db
-    cur = connection.execute(
+
+    like_condition = insta485.model.get_db().execute(
         "SELECT * FROM likes "
         "WHERE postid=?",
         (postid_url_slug, )
-    )
-    like_condition = cur.fetchall()
+    ).fetchall()
     likes_dict = {}
-    if (len(like_condition) == 0):
-        numlikes = 0
-        login_user_liked = False
-        like_url = None
-        likes_dict['url'] = like_url
-        likes_dict['lognameLikesThis'] = login_user_liked
-        likes_dict['numLikes'] = numlikes
+    if len(like_condition) == 0:
+        # numlikes = 0
+        # login_user_liked = False
+        # like_url = None
+        likes_dict['url'] = None
+        likes_dict['lognameLikesThis'] = False
+        likes_dict['numLikes'] = 0
     else:
-        numlikes = len(like_condition)
+        # numlikes = len(like_condition)
         login_user_liked = False
-        like_id = like_condition[0]['likeid']
+        # like_id = like_condition[0]['likeid']
         for likes in like_condition:
             if username == likes['owner']:
                 login_user_liked = True
         if login_user_liked:
-            like_url = "/api/v1/likes/{}/".format(like_id)
+            likes_dict['url'] = f"/api/v1/likes/{like_condition[0]['likeid']}/"
         else:
             # If the logged in user does not like the post
             # then the like url should be null
-            like_url = null
-        likes_dict['url'] = like_url
+            likes_dict['url'] = None
+        # likes_dict['url'] = like_url
         likes_dict['lognameLikesThis'] = login_user_liked
-        likes_dict['numLikes'] = numlikes
+        likes_dict['numLikes'] = len(like_condition)
 
     # assemble information into the context dictionary
     context = {}
     context['comments'] = comments_list
-    context['comments_url'] = "/api/v1/comments/?postid={}".format(
-        postid_url_slug)
+    context['comments_url'] = f"/api/v1/comments/?postid={postid_url_slug}"
     context['created'] = post['created']
-    context['imgUrl'] = filename
+    context['imgUrl'] = '/uploads/' + post['filename']
     context['likes'] = likes_dict
     context['owner'] = post['owner']
-    context['ownerImgUrl'] = userimage
-    context['ownerShowUrl'] = "/users/{}/".format(owner)
-    context['postShowUrl'] = "/posts/{}/".format(postid_url_slug)
+    context['ownerImgUrl'] = '/uploads/' + curr.fetchone()['filename']
+    context['ownerShowUrl'] = f"/users/{post['owner']}/"
+    context['postShowUrl'] = f"/posts/{postid_url_slug}/"
     context['postid'] = postid_url_slug
     context['url'] = flask.request.path
 
@@ -244,31 +241,31 @@ def create_like():
         (postid, username)
     )
     checking_likes = cur.fetchall()
-    if (len(checking_likes) != 0):
+    if len(checking_likes) != 0:
         # If the “like” already exists,
         # return the like object with a 200 response.
         likeid = checking_likes[0]['likeid']
-        url = "/api/v1/likes/{}/".format(likeid)
+        url = f"/api/v1/likes/{likeid}/"
         context['likeid'] = likeid
         context['url'] = url
         return flask.jsonify(**context), 200
-    else:
-        # Create one “like” for a specific post. Return 201 on success.
-        connection.execute(
-            "INSERT INTO likes(owner,postid) VALUES"
-            "(?,?)",
-            (username, postid)
-        )
-        find_new_like = connection.execute(
-            "SELECT * FROM likes "
-            "WHERE postid == ? and owner == ?",
-            (postid, username)
-        )
-        like_id = find_new_like.fetchone()['likeid']
-        url = "/api/v1/likes/{}/".format(like_id)
-        context['likeid'] = like_id
-        context['url'] = url
-        return flask.jsonify(**context), 201
+
+    # Create one “like” for a specific post. Return 201 on success.
+    connection.execute(
+        "INSERT INTO likes(owner,postid) VALUES"
+        "(?,?)",
+        (username, postid)
+    )
+    find_new_like = connection.execute(
+        "SELECT * FROM likes "
+        "WHERE postid == ? and owner == ?",
+        (postid, username)
+    )
+    like_id = find_new_like.fetchone()['likeid']
+    url = f"/api/v1/likes/{like_id}/"
+    context['likeid'] = like_id
+    context['url'] = url
+    return flask.jsonify(**context), 201
 
 
 # DELETE /api/v1/likes/<likeid>/
@@ -301,28 +298,27 @@ def delete_like(likeid):
         (likeid,)
     )
     likeid_exist = cur.fetchall()
-    if (len(likeid_exist) == 0):
+    if len(likeid_exist) == 0:
         # If the likeid does not exist, return 404.
         return flask.jsonify({}), 404
-    elif (len(user_own_like) == 0):
+    if len(user_own_like) == 0:
         # If the user does not own the like, return 403.
         return flask.jsonify({}), 403
-    else:
-        # Delete one “like”. Return 204 on success.
-        connection.execute(
-            "DELETE FROM likes "
-            "WHERE likeid == ? and owner == ?",
-            (likeid, username)
-        )
-        connection.commit()
-        return flask.jsonify({}), 204
+
+    # Delete one “like”. Return 204 on success.
+    connection.execute(
+        "DELETE FROM likes "
+        "WHERE likeid == ? and owner == ?",
+        (likeid, username)
+    )
+    connection.commit()
+    return flask.jsonify({}), 204
 
 
 @insta485.app.route('/api/v1/comments/', methods=['POST'])
 def create_comment():
     """Doc."""
     auth = flask.request.authorization
-    """return create comment """
     if 'username' not in flask.session and not auth:
         flask.abort(403)
     username = flask.session.get('username')
@@ -354,7 +350,7 @@ def create_comment():
 
     # get text from comment input box
     # print("Here comes the problem")
-    content_type = flask.request.headers.get('Content-Type')
+    # content_type = flask.request.headers.get('Content-Type')
     # print("the content type is",content_type)
     # print(flask.request.get_json())
     text = flask.request.get_json()['text']
@@ -398,8 +394,8 @@ def create_comment():
     context['lognameOwnsThis'] = True
     context['owner'] = username
     context['text'] = text
-    context['url'] = "/api/v1/comments/{}/".format(commentid)
-    context['ownerShowUrl'] = "/users/{}/".format(username)
+    context['url'] = f"/api/v1/comments/{commentid}/"
+    context['ownerShowUrl'] = f"/users/{username}/"
     # input = 3
     # cur = connection.execute(
     #     # "INSERT INTO comments(owner,postid,text) VALUES"
@@ -416,7 +412,6 @@ def create_comment():
 def delete_comment(commentid):
     """Doc."""
     auth = flask.request.authorization
-    """delete a comment"""
     if 'username' not in flask.session and not auth:
         flask.abort(403)
     username = flask.session.get('username')
@@ -437,28 +432,28 @@ def delete_comment(commentid):
     )
     # print(1)
     comment_id_exist = cur.fetchall()
-    if (len(comment_id_exist) == 0):
+    if len(comment_id_exist) == 0:
         # If the commentid does not exist, return 404.
         return flask.jsonify({}), 404
-    else:
-        # If the user doesn’t own the comment, return 403.
-        owner = comment_id_exist[0]["owner"]
-        if owner != username:
-            return flask.jsonify({}), 403
-        else:
-            # Delete a comment. Include the ID of the comment in the URL.
-            # Return 204 on success.
-            connection.execute(
-                "DELETE FROM comments "
-                "WHERE commentid == ?",
-                (commentid,)
-            )
-            connection.commit()
-            # print("-------------------------------")
-            # print("The current searched result is here")
-            # cur4 = connection.execute(
-            #     "SELECT * FROM comments "
-            # )
-            # print(cur4.fetchall())
-            # print("-------------------------------")
-            return flask.jsonify({}), 204
+
+    # If the user doesn’t own the comment, return 403.
+    owner = comment_id_exist[0]["owner"]
+    if owner != username:
+        return flask.jsonify({}), 403
+
+    # Delete a comment. Include the ID of the comment in the URL.
+    # Return 204 on success.
+    connection.execute(
+        "DELETE FROM comments "
+        "WHERE commentid == ?",
+        (commentid,)
+    )
+    connection.commit()
+    # print("-------------------------------")
+    # print("The current searched result is here")
+    # cur4 = connection.execute(
+    #     "SELECT * FROM comments "
+    # )
+    # print(cur4.fetchall())
+    # print("-------------------------------")
+    return flask.jsonify({}), 204
