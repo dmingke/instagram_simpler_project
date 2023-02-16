@@ -50,7 +50,7 @@ def get_post():
         (logname, logname, )
     ).fetchall()
     # num_post = len(total_post)
-    newest = total_post[len(total_post)-1]['postid']
+    new = total_post[len(total_post)-1]['postid']
     # if postid_lte is not specified
     if postid_if_user is None:
         # postid_if_user = flask.request.args.get("page"
@@ -67,7 +67,7 @@ def get_post():
         n_e = ""
         if size*(page+1) <= len(total_post):
             # ?????????what is the page (the max)
-            n_e = f"/api/v1/posts/?size={size}&page={page+1}&postid_lte={newest}"
+            n_e = f"/api/v1/posts/?size={size}&page={page+1}&postid_lte={new}"
     #  if specified
     else:
         selected = connection.execute(
@@ -85,7 +85,7 @@ def get_post():
                 if int(i['postid']) <= int(postid_if_user)-size*page:
                     results.append(i)
         if size*(page+1) + 1 <= len(total_post):
-            n_e = f"/api/v1/posts/?size={size}&page={page+1}&postid_lte={newest}"
+            n_e = f"/api/v1/posts/?size={size}&page={page+1}&postid_lte={new}"
         else:
             n_e = ""
     context = {
@@ -148,20 +148,19 @@ def get_post1(postid_url_slug):
     comments_list = []
     for comment in allcomment:
         # loguser_create_this_comment = False
-        singlecomment = {}
-        singlecomment['commentid'] = comment['commentid']
-        singlecomment['owner'] = comment['owner']
-        singlecomment['lognameOwnsThis'] = False
+        singlecommen = {}
+        singlecommen['commentid'] = comment['commentid']
+        singlecommen['owner'] = comment['owner']
+        singlecommen['lognameOwnsThis'] = False
         # print(flask.session.get('username'))
         if comment['owner'] == username:
-            singlecomment['lognameOwnsThis'] = True
+            singlecommen['lognameOwnsThis'] = True
         # singlecomment['lognameOwnsThis'] = loguser_create_this_comment
         # ownerurl = "/users/{}/".format(comment['owner'])
-        singlecomment['ownerShowUrl'] = f"/users/{comment['owner']}/"
-        singlecomment['text'] = comment['text']
-        # comment_url = "/api/v1/comments/{}/".format(singlecomment['commentid'])
-        singlecomment['url'] = f"/api/v1/comments/{singlecomment['commentid']}/"
-        comments_list.append(singlecomment)
+        singlecommen['ownerShowUrl'] = f"/users/{comment['owner']}/"
+        singlecommen['text'] = comment['text']
+        singlecommen['url'] = f"/api/v1/comments/{singlecommen['commentid']}/"
+        comments_list.append(singlecommen)
 
     # get post being liked condition from db
 
