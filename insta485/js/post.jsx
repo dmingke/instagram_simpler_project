@@ -54,7 +54,6 @@ export default function Posts({ url }) {
       dataLength={newResult.length}
       next={fetchData}
       hasMore={hasMore}
-      loader={<h4>Loading...</h4>}
     >
       <div>
         {newResult.map((result) => (
