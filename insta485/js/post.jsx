@@ -275,9 +275,7 @@ function Post({ props }) {
       setNewAddedComment("");
     }
   }
-  if (!checkingCompleted) {
-    return <p> please wait... </p>;
-  }
+
 
   function handleSubmit(event) {
     event.preventDefault();
